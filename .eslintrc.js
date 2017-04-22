@@ -1,9 +1,19 @@
 module.exports = {
+    "env": {
+      "node": true,
+      "mocha": true,
+      "es6": true
+    },
     "extends": "airbnb-base",
-    "plugins": [
-        "import"
-    ],
+    "plugins": [],
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "script"
+    },
     "rules": {
+      "strict": [
+        "error"
+      ],
       "arrow-parens": [
         "error",
         "always"
@@ -28,6 +38,8 @@ module.exports = {
       "no-console": 1,
       "no-use-before-define": 0,
       "prefer-template": 2,
-      "class-methods-use-this": 0
+      "class-methods-use-this": 0,
+      "no-useless-constructor": 0,
+      "comma-dangle": ["error", "never"]
     }
 };
