@@ -1,0 +1,16 @@
+{
+  "name": "multer-sharper",
+  "version": "0.0.1",
+  "description": "Streaming multer storage engine permit to resize for Google Cloud Storage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdul Fattah Ikhsan <ikhsannetwork@gmail.com> (http://ikhsannetwork.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "4.0.0-alpha.0",
+    "eslint-config-airbnb-base": "11.1.0",
+    "eslint-plugin-import": "2.2.0"
+  }
+}
