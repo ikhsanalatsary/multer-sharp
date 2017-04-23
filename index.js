@@ -129,11 +129,7 @@ function setSharp(options) {
   let imageStream = sharp();
 
   if (options.resize && options.size) {
-    if (options.size.option && typeof options.size.option === 'object' && options.size.option !== null) {
-      imageStream = imageStream.resize(options.size.width, options.size.height, options.size.option);
-    } else {
-      imageStream = imageStream.resize(options.size.width, options.size.height);
-    }
+    imageStream = imageStream.resize(options.size.width, options.size.height, options.size.option);
   }
 
   if (options.background) {
@@ -197,38 +193,28 @@ function setSharp(options) {
   }
 
   if (options.blur) {
-    if (typeof options.blur === 'number') {
-      imageStream = imageStream.blur(parseFloat(options.blur));
-    } else {
-      imageStream = imageStream.blur();
-    }
+    imageStream = imageStream.blur(options.blur);
   }
 
   if (options.sharpen) {
-    imageStream = imageStream.sharpen();
+    imageStream = imageStream.sharpen(options.sharpen);
   }
 
   if (options.gamma) {
-    if (typeof options.gamma === 'number') {
-      imageStream = imageStream.gamma(parseFloat(options.gamma));
-    } else {
-      imageStream = imageStream.gamma();
-    }
+    imageStream = imageStream.gamma(options.gamma);
   }
 
   if (options.grayscale || options.greyscale) {
-    imageStream = imageStream.grayscale();
+    imageStream = imageStream.greyscale();
   }
 
   if (options.normalize || options.normalise) {
-    imageStream = imageStream.normalize();
+    imageStream = imageStream.normalise();
   }
 
   if (options.format) {
-    if (typeof options.format === 'object' && options.format !== null) {
-      if (Object.prototype.hasOwnProperty.call(options.format, 'type') && Object.prototype.hasOwnProperty.call(options.format, 'option')) {
-        imageStream = imageStream.toFormat(options.format.type, options.format.option);
-      }
+    if (typeof options.format === 'object' && Object.prototype.hasOwnProperty.call(options.format, 'type') && Object.prototype.hasOwnProperty.call(options.format, 'option')) {
+      imageStream = imageStream.toFormat(options.format.type, options.format.option);
     } else {
       imageStream = imageStream.toFormat(options.format);
     }
