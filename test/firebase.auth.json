@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "multer-sharp",
+  "private_key_id": "06e288d8d3fbe1e2eb6ee18d3ef0156195896c9c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2xu6nuh0eeeGQ\nWW5NthpOohzRhMqryucHRorW4StR6veZdDyFdjHyw2Q935QrALgjeiefeFzmd3kR\nnpLnGPute9E+maVoF2bK3uiy1TFqe3cJSEtnsTv/PrfVw8tOQMPDFx75yC9AeZFb\nJidqMlzVq2jJrv2Yc0ja3GnMiJgauCXMd/CFUqX9k2vfceVb02+jnlqiVcc/1mnL\ni0AsBtCH0PspWjRF0I/kTIC5floNCIxYyY1eUvK5/kuRF9Gd7x2UMyRUfKDyAI9G\niktGnWoP8SHJDpLC9CLAAEuEYfjnhdpGtkQaSfIT+baGvcprBSQiMPXlBun55BYN\nuWt4MgtFAgMBAAECggEAErmKlZBRj1+5JgqjbD6tr0SYYzaRdMwSowItExp6T6gc\nuZHY6WtUbqRpzpTrHwSx2KCZEpNIISw4MP/n2NkMX5eBtkITWfibxUjU2g1RRLFl\nXoQThYn4tYt9Vd77Iwcrhv8FY12IybgqlgXwn8aNEC7BS3gr7sRQwGs4Q4Xy3zm2\nAHJpzFSvVs6J3v3BRlupDRMULEg71kWRVEH1weld4m5yXEfhcP1S1xNL4cIqRRXT\nN3SmMChUgIWykH6ZdoGO8FigULj+G0vtRWda0XvY3YIhW/ZiOhDGS6VWSr5ksK1F\ntmCfhQurboEFuX9K2vpOKJkaepBHJR0QR9wUIRCAeQKBgQDdR86TDOfo3YCZgtzM\n9XBNz77TyymhdAxpZHbUOMyR+GQZ6LgS3vcP0c3il6yi3VQl6g+wa2lHu9E3oDKv\n+JKmdh/PCr53Bd053c9TiAM/GMN2ppyHpdraV7QIkfuMsYl2TavvTuYh8uzuTfao\n5gci7AUR4hA97tAQlEZjhw3xMwKBgQDTdI4hp8FOCTNbuKQIJw6Ve92mIYJQtdlr\nyAgRNRJx91plJuzMVxx2ODzFIuKRUH4EKaQRFDfOzUlnlt2VXUIGVa9BtuUtMMT6\n6mwboV6sP5YIjDnVaRciQxkEo/rrchQ+npW8XcLQH1rctyz/ugYe/ofkyW+NkCQ2\nF5iM+DWBpwKBgC4H3vgGCkQNt8+3Qjk8oVT+b0Ldk1Zrrp1J8dIp0pxW4HPnTktW\nqGxZB4woYxgqFHQioYrgfTEX5+i7YW/rtI3+KpXGNWLLDH8aHiPROmOowhhvhkZN\ngR5EekYCICLfV6oNdEO+1O6g+xqDi1kNKNTh5hgXP6uyfwPD5HSVxpezAoGBAJgI\nZWitRL7mvpZj2wxBiKrRtDuOPDPri7eCysoUbn6iacvwgLEqsLwPEyJqQpxYU0KK\n7fuZncaCsxRX1FlgA+iqEqgc6Anl1rrRcYksLPWLgkQDDlHyjT+FHqfHftFp5ERh\noSceAsPAx4OJ8ECtb1k5iFtmuV3/FQoPTQ+OJmphAoGAAeYdeg36VsTIxLz4tsoT\nYaRyhxFXGhFf/ETe+oJJ7HYXwdXx7rE1yCAPXS+T55JfcVoh0p4fvB9AaQzUO4/Z\nGjleB7PVLBzG6pLhiDD2Nbfgr3ezEoIsJ/p1rWm9AOBruRoAKlyfiVJlGq1sxWIR\nO5Z4cSl52Zr3JsoD8riZzy0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-e1412@multer-sharp.iam.gserviceaccount.com",
+  "client_id": "108477811933654457806",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-e1412%40multer-sharp.iam.gserviceaccount.com"
+}
