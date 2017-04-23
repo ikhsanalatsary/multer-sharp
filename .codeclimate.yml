@@ -10,7 +10,7 @@ engines:
   eslint:
     enabled: true
     checks:
-      comma-dangle:
+      Similar code:
         enabled: false
   fixme:
     enabled: true
