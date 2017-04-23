@@ -1,0 +1,15 @@
+sudo: false
+language: node_js
+node_js:
+  - 'node'
+  - '6'
+  - '5'
+  - '4'
+before_install:
+  - npm i -g npm@^3.3.6
+before_script:
+  - npm prune
+script:
+  - npm run test
+after_success:
+  - npm run report-coverage

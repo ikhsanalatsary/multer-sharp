@@ -4,16 +4,34 @@
   "description": "Streaming multer storage engine permit to resize for Google Cloud Storage",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "report-coverage": "cat ./coverage/lcov.info | coverage",
+    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ikhsanalatsary/multer-sharp.git"
+  },
+  "keywords": [
+    "multer",
+    "sharp",
+    "image",
+    "resize",
+    "imageprocessing",
+    "gcloud",
+    "googlecloud",
+    "googlestorage"
+  ],
   "author": "Abdul Fattah Ikhsan <ikhsannetwork@gmail.com> (http://ikhsannetwork.com/)",
   "license": "MIT",
   "devDependencies": {
     "chai": "3.5.0",
+    "codecov.io": "0.1.6",
     "eslint": "4.0.0-alpha.0",
     "eslint-config-airbnb-base": "11.1.0",
     "eslint-plugin-import": "2.2.0",
     "express": "4.15.2",
+    "istanbul": "0.4.5",
+    "mocha": "3.2.0",
     "multer": "1.3.0",
     "supertest": "3.0.0"
   },
