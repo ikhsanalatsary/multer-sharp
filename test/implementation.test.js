@@ -9,7 +9,7 @@ const multerSharp = require('../index');
 const config = require('./config');
 
 const app = express();
-const should = chai.should();
+const should = chai.should(); // eslint-disable-line no-unused-vars
 let lastRes = null;
 let lastReq = lastRes;
 const storage = multerSharp({
@@ -19,7 +19,11 @@ const storage = multerSharp({
   acl: config.uploads.gcsUpload.acl,
   size: {
     width: 400,
-    height: 400
+    height: 400,
+    option: {
+      kernel: 'lanczos2',
+      interpolator: 'nohalo'
+    }
   },
   max: true
 });
@@ -60,14 +64,63 @@ const storage4 = multerSharp({
   keyFilename: config.uploads.gcsUpload.keyFilename,
   acl: config.uploads.gcsUpload.acl,
   destination: config.uploads.gcsUpload.destination,
-  size: {
-    width: 400,
-    height: 400
-  },
-  max: true,
-  format: 'jpeg'
+  size: { width: 200 },
+  crop: 'north',
+  background: { r: 0, g: 0, b: 100, alpha: 0 },
+  withoutEnlargement: true,
+  ignoreAspectRatio: true,
+  trim: 50,
+  flatten: true,
+  extend: { top: 10, bottom: 20, left: 10, right: 10 },
+  negate: true,
+  rotate: 90,
+  flip: true,
+  flop: true,
+  blur: true,
+  sharpen: true,
+  gamma: 2.5,
+  greyscale: true,
+  normalize: true,
+  format: {
+    type: 'jpeg',
+    option: {
+      progressive: true,
+      quality: 90
+    }
+  }
 });
 const upload4 = multer({ storage: storage4 });
+
+const storage5 = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  destination: config.uploads.gcsUpload.destination,
+  size: { width: 400, height: 400 },
+  crop: 'north',
+  background: { r: 0, g: 0, b: 0, alpha: 0 },
+  embed: true,
+  max: true,
+  min: true,
+  withoutEnlargement: true,
+  ignoreAspectRatio: true,
+  extract: { left: 0, top: 2, width: 50, height: 100 },
+  trim: 50,
+  flatten: true,
+  extend: { top: 10, bottom: 20, left: 10, right: 10 },
+  negate: true,
+  rotate: 90,
+  flip: true,
+  flop: true,
+  blur: true,
+  sharpen: true,
+  gamma: 2.5,
+  grayscale: true,
+  normalise: true,
+  format: 'jpeg'
+});
+const upload5 = multer({ storage: storage5 });
 
 // express setup
 app.get('/book', (req, res) => {
@@ -106,8 +159,18 @@ app.post('/uploadconverttojpeg', upload4.single('myPic'), (req, res, next) => {
   next();
 });
 
+// express setup
+app.post('/uploadanddelete', upload5.single('myPic'), (req, res, next) => {
+  storage5._removeFile(req, req.file, (err) => { // eslint-disable-line no-underscore-dangle
+    if (err) next(err);
+    res.sendStatus(200);
+    next();
+  });
+});
+
 // Run Test
-describe('express', () => {
+describe('express', function describe() {
+  this.timeout(15000);
   it('initial server', (done) => {
     supertest(app)
       .get('/book')
@@ -117,12 +180,14 @@ describe('express', () => {
       });
   });
   it('successfully uploads a file', (done) => {
+    setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
-      .expect(200, done);
+      .expect(200);
   });
-  it('returns a req.file with the Google Cloud Storage filename and location', (done) => {
+  it('returns a req.file with the Google Cloud Storage filename and path', (done) => {
+    setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
@@ -136,10 +201,10 @@ describe('express', () => {
         file.should.have.property('originalname');
         file.fieldname.should.have.string('myPic');
         file.path.should.have.string('googleapis');
-        done();
       });
   });
   it('return a req.file with the optional filename', (done) => {
+    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithfilename')
       .attach('myPic', 'test/nodejs-512.png')
@@ -154,10 +219,10 @@ describe('express', () => {
         file.fieldname.should.have.string('myPic');
         file.filename.should.to.equal('myPic-newFilename');
         file.path.should.have.string('googleapis');
-        done();
       });
   });
   it('return a req.file with the optional destination', (done) => {
+    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithdestination')
       .attach('myPic', 'test/nodejs-512.png')
@@ -172,10 +237,10 @@ describe('express', () => {
         file.fieldname.should.have.string('myPic');
         file.path.should.have.string(config.uploads.gcsUpload.destination);
         file.path.should.have.string('googleapis');
-        done();
       });
   });
   it('return a req.file with mimetype image/jpeg', (done) => {
+    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadconverttojpeg')
       .attach('myPic', 'test/nodejs-512.png')
@@ -191,7 +256,17 @@ describe('express', () => {
         file.mimetype.should.have.string('image/jpeg');
         file.path.should.have.string(config.uploads.gcsUpload.destination);
         file.path.should.have.string('googleapis');
-        done();
+      });
+  });
+  it('upload and delete after', (done) => {
+    setTimeout(done, 10000);
+    supertest(app)
+      .post('/uploadanddelete')
+      .attach('myPic', 'test/nodejs-512.png')
+      .expect(200)
+      .end((err, res) => {
+        if (err) done(err);
+        res.status.should.to.equal(200);
       });
   });
 });

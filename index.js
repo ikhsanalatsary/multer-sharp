@@ -52,7 +52,7 @@ class MulterSharp {
         const fileOptions = {
           predefinedAcl: this.options.acl,
           metadata: {
-            contentType: lookup(this.options.format) || file.mimetype
+            contentType: getFormat(this.options.format) || file.mimetype
           }
         };
         const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
@@ -65,7 +65,7 @@ class MulterSharp {
           .on('finish', () => {
             const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
             return cb(null, {
-              mimetype: lookup(this.options.format) || file.mimetype,
+              mimetype: getFormat(this.options.format) || file.mimetype,
               path: uri,
               filename
             });
@@ -75,8 +75,12 @@ class MulterSharp {
   }
 
   _removeFile(req, file, cb) {
-    const gcFile = this.gcsBucket.file(file.filename);
-    gcFile.delete(cb);
+    this.getDestination(req, file, (destErr, destination) => {
+      if (destErr) cb(destErr);
+      const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${file.filename}` : file.filename;
+      const gcFile = this.gcsBucket.file(gcName);
+      gcFile.delete(cb);
+    });
   }
 }
 
@@ -124,90 +128,120 @@ function getFilename(req, file, cb) {
 function setSharp(options) {
   let imageStream = sharp();
 
-  switch (options) {
-    case options.resize && options.size:
+  if (options.resize && options.size) {
+    if (options.size.option && typeof options.size.option === 'object' && options.size.option !== null) {
+      imageStream = imageStream.resize(options.size.width, options.size.height, options.size.option);
+    } else {
       imageStream = imageStream.resize(options.size.width, options.size.height);
-      break;
-    case options.max:
-      imageStream = imageStream.max();
-      break;
-    case typeof options.format === 'string' && options.format.length > 0:
-      imageStream = imageStream.toFormat(options.format);
-      break;
-    case options.embed:
-      imageStream = imageStream.embed();
-      break;
-    case options.min:
-      imageStream = imageStream.min();
-      break;
-    case options.ignoreAspectRatio:
-      imageStream = imageStream.ignoreAspectRatio();
-      break;
-    case options.withoutEnlargement:
-      imageStream = imageStream.withoutEnlargement();
-      break;
-    case options.extract:
-      imageStream = imageStream.extract();
-      break;
-    case options.trim:
-      imageStream = imageStream.trim(parseInt(options.trim, 10));
-      break;
-    case options.flatten:
-      imageStream = imageStream.flatten();
-      break;
-    case options.extend:
-      imageStream = imageStream.extend(options.extend);
-      break;
-    case options.negate:
-      imageStream = imageStream.negate();
-      break;
-    case includes([0, 90, 180, 270], options.rotate):
-      imageStream = imageStream.rotate(options.rotate);
-      break;
-    case options.slip:
-      imageStream = imageStream.flip();
-      break;
-    case options.flop:
-      imageStream = imageStream.flop();
-      break;
-    case options.blur:
-      if (typeof options.blur === 'number') {
-        imageStream = imageStream.blur(parseFloat(options.blur));
-      } else {
-        imageStream = imageStream.blur();
-      }
-      break;
-    case options.sharpen:
-      imageStream = imageStream.sharpen();
-      break;
-    case options.gamma:
-      if (typeof options.gamma === 'number') {
-        imageStream = imageStream.gamma(parseFloat(options.blur));
-      } else {
-        imageStream = imageStream.gamma();
-      }
-      break;
-    case options.grayscale || options.greyscale:
-      imageStream = imageStream.grayscale();
-      break;
-    case options.normalize || options.normalise:
-      imageStream = imageStream.normalize();
-      break;
-    case options.quality:
-      imageStream = imageStream.quality(Number(options.quality));
-      break;
-    case options.progressive:
-      imageStream = imageStream.progressive();
-      break;
-    case options.crop && Object.prototype.hasOwnProperty.call(sharp.gravity, options.crop):
-      imageStream = imageStream.crop(sharp.gravity[options.crop]);
-      break;
-    case options.background:
-      imageStream = imageStream.background(options.background);
-      break;
-    default:
+    }
   }
+
+  if (options.background) {
+    imageStream = imageStream.background(options.background);
+  }
+
+  if (options.crop && Object.prototype.hasOwnProperty.call(sharp.gravity, options.crop)) {
+    imageStream = imageStream.crop(sharp.gravity[options.crop]);
+  }
+
+  if (options.embed) {
+    imageStream = imageStream.embed();
+  }
+
+  if (options.max) {
+    imageStream = imageStream.max();
+  }
+
+  if (options.min) {
+    imageStream = imageStream.min();
+  }
+
+  if (options.withoutEnlargement) {
+    imageStream = imageStream.withoutEnlargement();
+  }
+
+  if (options.ignoreAspectRatio) {
+    imageStream = imageStream.ignoreAspectRatio();
+  }
+
+  if (options.extract) {
+    imageStream = imageStream.extract(options.extract);
+  }
+
+  if (options.trim) {
+    imageStream = imageStream.trim(parseInt(options.trim, 10));
+  }
+
+  if (options.flatten) {
+    imageStream = imageStream.flatten();
+  }
+
+  if (options.extend) {
+    imageStream = imageStream.extend(options.extend);
+  }
+
+  if (options.negate) {
+    imageStream = imageStream.negate();
+  }
+
+  if (includes([0, 90, 180, 270], options.rotate)) {
+    imageStream = imageStream.rotate(options.rotate);
+  }
+
+  if (options.flip) {
+    imageStream = imageStream.flip();
+  }
+
+  if (options.flop) {
+    imageStream = imageStream.flop();
+  }
+
+  if (options.blur) {
+    if (typeof options.blur === 'number') {
+      imageStream = imageStream.blur(parseFloat(options.blur));
+    } else {
+      imageStream = imageStream.blur();
+    }
+  }
+
+  if (options.sharpen) {
+    imageStream = imageStream.sharpen();
+  }
+
+  if (options.gamma) {
+    if (typeof options.gamma === 'number') {
+      imageStream = imageStream.gamma(parseFloat(options.gamma));
+    } else {
+      imageStream = imageStream.gamma();
+    }
+  }
+
+  if (options.grayscale || options.greyscale) {
+    imageStream = imageStream.grayscale();
+  }
+
+  if (options.normalize || options.normalise) {
+    imageStream = imageStream.normalize();
+  }
+
+  if (options.format) {
+    if (typeof options.format === 'object' && options.format !== null) {
+      if (Object.prototype.hasOwnProperty.call(options.format, 'type') && Object.prototype.hasOwnProperty.call(options.format, 'option')) {
+        imageStream = imageStream.toFormat(options.format.type, options.format.option);
+      }
+    } else {
+      imageStream = imageStream.toFormat(options.format);
+    }
+  }
+
   return imageStream;
+}
+
+function getFormat(format) {
+  if (typeof format === 'object' && Object.prototype.hasOwnProperty.call(format, 'type')) {
+    return lookup(format.type);
+  }
+  return lookup(format);
 }
 
 module.exports = (options) => new MulterSharp(options);
