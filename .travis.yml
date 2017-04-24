@@ -1,4 +1,4 @@
-sudo: false
+sudo: required
 language: node_js
 cache:
   directories:
@@ -9,7 +9,7 @@ node_js:
   - '5'
   - '4'
 before_install:
-  - rm -rf node_modules/
+  - sudo apt-get install build-essential
 before_script:
   - npm prune
 script:
