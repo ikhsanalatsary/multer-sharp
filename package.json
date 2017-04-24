@@ -11,6 +11,9 @@
     "type": "git",
     "url": "https://github.com/ikhsanalatsary/multer-sharp.git"
   },
+  "bugs": {
+    "url": "https://github.com/ikhsanalatsary/multer-sharp/issues"
+  },
   "keywords": [
     "multer",
     "sharp",
