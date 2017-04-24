@@ -81,7 +81,7 @@ app.post('/uploadwithfilename', upload2.single('myPic'), (req, res, next) => {
 for more example you can see [here](https://github.com/ikhsanalatsary/multer-sharp/blob/master/test/implementation.test.js)
 
 # Options
-```
+```javascript
 const storage = gcsSharp(options);
 ```
 
