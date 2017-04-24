@@ -1,5 +1,15 @@
 sudo: false
 language: node_js
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+os:
+  - linux
+  - osx
+osx_image: xcode8
 cache:
   directories:
     - node_modules
@@ -9,8 +19,7 @@ node_js:
   - '5'
   - '4'
 before_install:
-  - npm i -g node-pre-gyp
-  - npm i -g node-gyp
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX=g++-4.8; fi
 before_script:
   - npm prune
 script:
