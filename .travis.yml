@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 language: node_js
 cache:
   directories:
@@ -9,7 +9,8 @@ node_js:
   - '5'
   - '4'
 before_install:
-  - sudo apt-get install libkrb5-dev
+  - npm i -g node-pre-gyp
+  - npm i -g node-gyp
 before_script:
   - npm prune
 script:
