@@ -4,7 +4,7 @@
   "description": "Streaming multer storage engine permit to resize for Google Cloud Storage",
   "main": "index.js",
   "scripts": {
-    "report-coverage": "cat ./coverage/lcov.info | coverage",
+    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
     "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js"
   },
   "repository": {
@@ -26,7 +26,7 @@
   "devDependencies": {
     "chai": "3.5.0",
     "codecov.io": "0.1.6",
-    "eslint": "4.0.0-alpha.0",
+    "eslint": "3.19.0",
     "eslint-config-airbnb-base": "11.1.0",
     "eslint-plugin-import": "2.2.0",
     "express": "4.15.2",
