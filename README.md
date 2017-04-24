@@ -30,7 +30,7 @@ npm test
 
 # Usage
 
-```
+```javascript
 const express = require('express');
 const multer = require('multer');
 const gcsSharp = require('multer-sharp');
