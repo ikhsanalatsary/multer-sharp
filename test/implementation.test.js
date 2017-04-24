@@ -5,6 +5,7 @@ const supertest = require('supertest');
 const multer = require('multer');
 const chai = require('chai');
 
+const expect = chai.expect;
 const multerSharp = require('../index');
 const config = require('./config');
 
@@ -122,6 +123,20 @@ const storage5 = multerSharp({
 });
 const upload5 = multer({ storage: storage5 });
 
+const storage6 = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  size: {
+    width: 400,
+    height: 400
+  },
+  max: true,
+  extract: { left: 0, top: 2, width: 400, height: 400 }
+});
+const upload6 = multer({ storage: storage6 });
+
 // express setup
 app.get('/book', (req, res) => {
   res.sendStatus(200);
@@ -135,7 +150,7 @@ app.post('/upload', upload.single('myPic'), (req, res, next) => {
   next();
 });
 
-// // express setup
+// express setup
 app.post('/uploadwithfilename', upload2.single('myPic'), (req, res, next) => {
   lastReq = req;
   lastRes = res;
@@ -165,6 +180,15 @@ app.post('/uploadanddelete', upload5.single('myPic'), (req, res, next) => {
     if (err) next(err);
     res.sendStatus(200);
     next();
+  });
+});
+
+app.post('/uploadwithtransformerror', (req, res) => {
+  const uploadAndError = upload6.single('myPic');
+  uploadAndError(req, res, (uploadError) => {
+    if (uploadError) {
+      res.status(400).json({ message: 'Something went wrong when resize' });
+    }
   });
 });
 
@@ -268,5 +292,39 @@ describe('express', function describe() {
         if (err) done(err);
         res.status.should.to.equal(200);
       });
+  });
+  it('upload and return error, cause transform/resize error', (done) => {
+    setTimeout(done, 10000);
+    supertest(app)
+      .post('/uploadwithtransformerror')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end((err, res) => {
+        res.status.should.to.equal(400);
+        res.body.message.should.to.equal('Something went wrong when resize');
+      });
+  });
+});
+
+describe('Multer-Sharp', () => {
+  it('should throw an error, cause bucket is not specify', (done) => {
+    expect(multerSharp.bind(multerSharp, {
+      projectId: config.uploads.gcsUpload.projectId,
+      keyFilename: config.uploads.gcsUpload.keyFilename
+    })).to.throw('You have to specify bucket for Google Cloud Storage to work.');
+    done();
+  });
+  it('should throw an error, cause projectId is not specify', (done) => {
+    expect(multerSharp.bind(multerSharp, {
+      bucket: config.uploads.gcsUpload.bucket,
+      keyFilename: config.uploads.gcsUpload.keyFilename
+    })).to.throw('You have to specify project id for Google Cloud Storage to work.');
+    done();
+  });
+  it('should throw an error, cause keyFilename is not specify', (done) => {
+    expect(multerSharp.bind(multerSharp, {
+      bucket: config.uploads.gcsUpload.bucket,
+      projectId: config.uploads.gcsUpload.projectId
+    })).to.throw('You have to specify credentials key file for Google Cloud Storage to work.');
+    done();
   });
 });

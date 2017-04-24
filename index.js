@@ -60,8 +60,9 @@ class MulterSharp {
 
         file.stream
           .pipe(setSharp(this.options))
+          .on('error', (transformErr) => cb(transformErr))
           .pipe(gcFile.createWriteStream(fileOptions))
-          .on('error', (streamErr) => cb(streamErr))
+          .on('error', (gcErr) => cb(gcErr))
           .on('finish', () => {
             const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
             return cb(null, {
@@ -110,9 +111,7 @@ MulterSharp.defaultOptions = {
   grayscale: false,
   greyscale: false,
   normalize: false,
-  normalise: false,
-  progressive: false,
-  quality: false
+  normalise: false
 };
 
 function getDestination(req, file, cb) {
