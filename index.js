@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const gcloud = require('google-cloud');
+const gcloud = require('@google-cloud/storage');
 const sharp = require('sharp');
 const includes = require('array-includes');
 const { lookup } = require('mime-types');
@@ -34,7 +34,7 @@ class MulterSharp {
       this.getDestination = options.destination || getDestination;
     }
 
-    this.gcStorage = gcloud.storage({
+    this.gcStorage = gcloud({
       projectId: gcOptions.projectId,
       keyFilename: gcOptions.keyFilename
     });
