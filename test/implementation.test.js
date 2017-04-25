@@ -11,8 +11,21 @@ const config = require('./config');
 
 const app = express();
 const should = chai.should(); // eslint-disable-line no-unused-vars
+const wrongConfig = {
+  uploads: {
+    gcsUpload: {
+      bucket: 'multer.appspot.com', // Required : bucket name to upload
+      projectId: 'multer', // Required : Google project ID
+      keyFilename: 'test/firebase.auth.json', // Required : JSON credentials file for Google Cloud Storage
+      destination: 'public', // Optional : destination folder to store your file for Google Cloud Storage, default: ''
+      acl: 'publicRead' // Required : acl credentials file for Google Cloud Storage, publicrRead or private, default: private
+    }
+  }
+};
+
 let lastRes = null;
 let lastReq = lastRes;
+
 const storage = multerSharp({
   bucket: config.uploads.gcsUpload.bucket,
   projectId: config.uploads.gcsUpload.projectId,
@@ -137,6 +150,13 @@ const storage6 = multerSharp({
 });
 const upload6 = multer({ storage: storage6 });
 
+const storage7 = multerSharp({
+  bucket: wrongConfig.uploads.gcsUpload.bucket,
+  projectId: wrongConfig.uploads.gcsUpload.projectId,
+  keyFilename: wrongConfig.uploads.gcsUpload.keyFilename
+});
+const upload7 = multer({ storage: storage7 });
+
 // express setup
 app.get('/book', (req, res) => {
   res.sendStatus(200);
@@ -188,6 +208,15 @@ app.post('/uploadwithtransformerror', (req, res) => {
   uploadAndError(req, res, (uploadError) => {
     if (uploadError) {
       res.status(400).json({ message: 'Something went wrong when resize' });
+    }
+  });
+});
+
+app.post('/uploadwithgcserror', (req, res) => {
+  const uploadAndError = upload7.single('myPic');
+  uploadAndError(req, res, (uploadError) => {
+    if (uploadError) {
+      res.status(uploadError.code).json({ message: uploadError.message });
     }
   });
 });
@@ -301,6 +330,16 @@ describe('express', function describe() {
       .end((err, res) => {
         res.status.should.to.equal(400);
         res.body.message.should.to.equal('Something went wrong when resize');
+      });
+  });
+  it('upload and return error, cause google cloud error', (done) => {
+    setTimeout(done, 10000);
+    supertest(app)
+      .post('/uploadwithgcserror')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end((err, res) => {
+        res.status.should.to.equal(404);
+        res.body.message.should.to.equal('Not Found');
       });
   });
 });
