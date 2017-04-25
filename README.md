@@ -6,7 +6,7 @@
 
 Multer Sharp is streaming multer storage engine permit to resize and upload to Google Cloud Storage.
 
-This project is mostly an integration piece for existing code samples from Multer's [storage engine documentation](https://github.com/expressjs/multer/blob/master/StorageEngine.md). Integrates with [google-cloud](https://github.com/googlecloudplatform/google-cloud-node) and [sharp](https://github.com/lovell/sharp)
+This project is mostly an integration piece for existing code samples from Multer's [storage engine documentation](https://github.com/expressjs/multer/blob/master/StorageEngine.md). With add-ons include [google-cloud](https://github.com/googlecloudplatform/google-cloud-node) and [sharp](https://github.com/lovell/sharp)
 
 # Requirement:
 
@@ -56,13 +56,13 @@ app.post('/upload', upload.single('myPic'), (req, res) => {
 
 // simple resize with custom filename
 const storage2 = gcsSharp({
-    filename: (req, file, cb) => {
-        cb(null, `${file.fieldname}-newFilename`);
-    },
-    bucket: 'YOUR_BUCKET', // Required : bucket name to upload
-    projectId: 'YOUR_PROJECTID', // Required : Google project ID
-    keyFilename: 'YOUR_KEYFILENAME', // Required : JSON credentials file for Google Cloud Storage
-    acl: 'publicRead' // Required : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
+  filename: (req, file, cb) => {
+      cb(null, `${file.fieldname}-newFilename`);
+  },
+  bucket: 'YOUR_BUCKET', // Required : bucket name to upload
+  projectId: 'YOUR_PROJECTID', // Required : Google project ID
+  keyFilename: 'YOUR_KEYFILENAME', // Required : JSON credentials file for Google Cloud Storage
+  acl: 'publicRead', // Required : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
   size: {
     width: 400,
     height: 400
@@ -95,7 +95,7 @@ const storage = gcsSharp(options);
 | acl | 'private' | Required acl credentials file for Google Cloud Storage, value: `publicRead` or `private`, doc: https://cloud.google.com/storage/docs/access-control/lists |
 | destination | emptyString | Optional, destination folder to store your file on Google Cloud Storage |
 | format | originalFileFormat | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', option: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
-| size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [resize](http://sharp.dimens.io/en/stable/api-resize/#resize) |
+| size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 
 #### sharp options
 Please visit this sharp **[sharp](https://github.com/lovell/sharp)** for detailed overview of specific option.
