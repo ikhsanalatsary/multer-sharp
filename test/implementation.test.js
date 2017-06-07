@@ -68,7 +68,8 @@ const storage3 = multerSharp({
     width: 400,
     height: 400
   },
-  max: true
+  max: true,
+  toColourspace: 'srgb'
 });
 const upload3 = multer({ storage: storage3 });
 
@@ -132,7 +133,17 @@ const storage5 = multerSharp({
   gamma: 2.5,
   grayscale: true,
   normalise: true,
-  format: 'jpeg'
+  format: 'jpeg',
+  withMetadata: {
+    orientation: 4
+  },
+  convolve: {
+    width: 3,
+    height: 3,
+    kernel: [-1, 0, 1, -2, 0, 2, -1, 0, 1]
+  },
+  threshold: 129,
+  toColorspace: 'b-w'
 });
 const upload5 = multer({ storage: storage5 });
 

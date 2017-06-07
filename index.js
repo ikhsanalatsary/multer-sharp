@@ -5,6 +5,7 @@ const gcloud = require('@google-cloud/storage');
 const sharp = require('sharp');
 const includes = require('array-includes');
 const { lookup } = require('mime-types');
+const chalk = require('chalk');
 
 class MulterSharp {
   constructor(options) {
@@ -59,7 +60,12 @@ class MulterSharp {
         const gcFile = this.gcsBucket.file(gcName);
 
         file.stream
-          .pipe(setSharp(this.options))
+          .pipe(transformer(this.options))
+          .on('info', (info) => {
+            /* eslint-disable no-console */
+            console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
+            console.info(chalk.magenta(JSON.stringify(info)));
+          })
           .on('error', (transformErr) => cb(transformErr))
           .pipe(gcFile.createWriteStream(fileOptions))
           .on('error', (gcErr) => cb(gcErr))
@@ -87,8 +93,6 @@ class MulterSharp {
 
 MulterSharp.defaultOptions = {
   acl: 'private',
-  getFilename,
-  getDestination,
   resize: true,
   crop: false,
   background: false,
@@ -111,7 +115,12 @@ MulterSharp.defaultOptions = {
   grayscale: false,
   greyscale: false,
   normalize: false,
-  normalise: false
+  normalise: false,
+  withMetadata: false,
+  convolve: false,
+  threshold: false,
+  toColourspace: false,
+  toColorspace: false
 };
 
 function getDestination(req, file, cb) {
@@ -124,7 +133,7 @@ function getFilename(req, file, cb) {
   });
 }
 
-function setSharp(options) {
+function transformer(options) {
   let imageStream = sharp();
 
   if (options.resize && options.size) {
@@ -209,6 +218,22 @@ function setSharp(options) {
 
   if (options.normalize || options.normalise) {
     imageStream = imageStream.normalise();
+  }
+
+  if (options.convolve) {
+    imageStream = imageStream.convolve(options.convolve);
+  }
+
+  if (options.threshold) {
+    imageStream = imageStream.threshold(options.threshold);
+  }
+
+  if (options.toColourspace || options.toColorspace) {
+    imageStream = imageStream.toColourspace(options.toColourspace || options.toColorspace);
+  }
+
+  if (options.withMetadata) {
+    imageStream = imageStream.withMetadata(options.withMetadata);
   }
 
   if (options.format) {
