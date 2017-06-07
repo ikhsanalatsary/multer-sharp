@@ -10,7 +10,7 @@ This project is mostly an integration piece for existing code samples from Multe
 
 # Requirement:
 
-  node v6 LTS version or latest version, but for node v4 is support too(not recomended cause it's alreaady maintenance).
+  node v6 LTS version or latest version
 
 # Installation
 
@@ -42,7 +42,7 @@ const storage = gcsSharp({
     bucket: 'YOUR_BUCKET', // Required : bucket name to upload
     projectId: 'YOUR_PROJECTID', // Required : Google project ID
     keyFilename: 'YOUR_KEYFILENAME', // Required : JSON credentials file for Google Cloud Storage
-    destination: 'public', // Optional : destination folder to store your file on Google Cloud Storage, default: ''
+    destination: 'public/image', // Optional : destination folder to store your file on Google Cloud Storage, default: ''
     acl: 'publicRead' // Required : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
 });
 const upload = multer({ storage });
@@ -98,7 +98,7 @@ const storage = gcsSharp(options);
 | size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 
 #### sharp options
-Please visit this sharp **[sharp](https://github.com/lovell/sharp)** for detailed overview of specific option.
+Please visit this **[sharp](https://github.com/lovell/sharp)** for detailed overview of specific option.
 
 multer-sharp embraces sharp option, as table below:
 
@@ -125,7 +125,10 @@ multer-sharp embraces sharp option, as table below:
 | gamma | false | Apply a gamma correction. |
 | grayscale *or* greyscale | false | Convert to 8-bit greyscale; 256 shades of grey. |
 | normalize *or* normalise | false | Enhance output image contrast by stretching its luminance to cover the full dynamic range. |
-
+| withMetadata | false | Include all metadata (EXIF, XMP, IPTC) from the input image in the output image.
+| convolve | false | Convolve the image with the specified kernel.
+| threshold | false | Any pixel value greather than or equal to the threshold value will be set to 255, otherwise it will be set to 0
+| toColourspace *or* toColorspace | false | Set the output colourspace. By default output image will be web-friendly sRGB, with additional channels interpreted as alpha channels.
 ***
 
 ## License
