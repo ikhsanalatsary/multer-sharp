@@ -9,11 +9,12 @@ const chalk = require('chalk');
 
 class MulterSharp {
   constructor(options) {
-    const gcOptions = {};
-    gcOptions.bucket = options.bucket || process.env.GCS_BUCKET || null;
-    gcOptions.projectId = options.projectId || process.env.GCLOUD_PROJECT || null;
-    gcOptions.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
+    /* eslint-disable no-param-reassign*/
+    options.bucket = options.bucket || process.env.GCS_BUCKET || null;
+    options.projectId = options.projectId || process.env.GCLOUD_PROJECT || null;
+    options.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
 
+    /* eslint-enable */
     if (!options.bucket) {
       throw new Error('You have to specify bucket for Google Cloud Storage to work.');
     }
@@ -36,11 +37,11 @@ class MulterSharp {
     }
 
     this.gcStorage = gcloud({
-      projectId: gcOptions.projectId,
-      keyFilename: gcOptions.keyFilename
+      projectId: options.projectId,
+      keyFilename: options.keyFilename
     });
 
-    this.gcsBucket = this.gcStorage.bucket(gcOptions.bucket);
+    this.gcsBucket = this.gcStorage.bucket(options.bucket);
   }
 
   _handleFile(req, file, cb) {
