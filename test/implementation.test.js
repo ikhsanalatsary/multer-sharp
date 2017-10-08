@@ -397,7 +397,6 @@ describe('express', function describe() {
         file.should.have.property('encoding');
         file.should.have.property('mimetype');
         file.should.have.property('originalname');
-        file.should.have.property('sd');
       });
   });
 });
