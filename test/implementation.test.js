@@ -168,6 +168,24 @@ const storage7 = multerSharp({
 });
 const upload7 = multer({ storage: storage7 });
 
+const storage8 = multerSharp({
+  // filename: (req, file, cb) => {
+  //   cb(null, `${file.fieldname}-newFilename-${new Date()}`);
+  // },
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  sizes: [
+    // { suffix: 'xlg', width: 1200, height: 1200 },
+    // { suffix: 'lg', width: 800, height: 800 },
+    { suffix: 'md', width: 500, height: 500 },
+    { suffix: 'sm', width: 300, height: 300 },
+    { suffix: 'xs', width: 100, height: 100 }
+  ],
+});
+const upload8 = multer({ storage: storage8 });
+
 // express setup
 app.get('/book', (req, res) => {
   res.sendStatus(200);
@@ -230,6 +248,17 @@ app.post('/uploadwithgcserror', (req, res) => {
       res.status(uploadError.code).json({ message: uploadError.message });
     }
   });
+});
+
+// express setup
+app.post('/uploadwithmultiplesize', upload8.single('myPic'), (req, res, next) => {
+  lastReq = req;
+  lastRes = res;
+
+  if (lastReq && lastReq.file) {
+    res.sendStatus(200);
+  }
+  next();
 });
 
 // Run Test
@@ -351,6 +380,24 @@ describe('express', function describe() {
       .end((err, res) => {
         res.status.should.to.equal(404);
         res.body.message.should.to.equal('Not Found');
+      });
+  });
+  it('return a req.file with multiple sizes', (done) => {
+    this.timeout(15000);
+    setTimeout(done, 1000);
+    supertest(app)
+      .post('/uploadwithmultiplesize')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end(() => {
+        const file = lastReq.file;
+        file.should.have.property('md');
+        file.should.have.property('sm');
+        file.should.have.property('xs');
+        file.should.have.property('fieldname');
+        file.should.have.property('encoding');
+        file.should.have.property('mimetype');
+        file.should.have.property('originalname');
+        file.should.have.property('sd');
       });
   });
 });
