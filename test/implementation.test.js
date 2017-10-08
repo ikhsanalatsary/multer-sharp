@@ -169,9 +169,6 @@ const storage7 = multerSharp({
 const upload7 = multer({ storage: storage7 });
 
 const storage8 = multerSharp({
-  // filename: (req, file, cb) => {
-  //   cb(null, `${file.fieldname}-newFilename-${new Date()}`);
-  // },
   bucket: config.uploads.gcsUpload.bucket,
   projectId: config.uploads.gcsUpload.projectId,
   keyFilename: config.uploads.gcsUpload.keyFilename,
@@ -182,7 +179,7 @@ const storage8 = multerSharp({
     { suffix: 'md', width: 500, height: 500 },
     { suffix: 'sm', width: 300, height: 300 },
     { suffix: 'xs', width: 100, height: 100 }
-  ],
+  ]
 });
 const upload8 = multer({ storage: storage8 });
 
