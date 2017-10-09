@@ -296,13 +296,9 @@ app.post('/uploadwithmultiplesizetransformerror', (req, res) => {
     }
   });
 });
-app.post('/uploadwithmultiplesizegcerror', (req, res) => {
-  const uploadAndError = upload10.single('myPic');
-  uploadAndError(req, res, (uploadError) => {
-    if (uploadError) {
-      res.status(400).json({ message: uploadError.Error });
-    }
-  });
+app.post('/uploadwithmultiplesizegcerror', upload10.single('myPic'), (req, res) => {
+  lastReq = req;
+  lastRes = res;
 });
 
 // Run Test
@@ -458,7 +454,7 @@ describe('express', function describe() {
       .post('/uploadwithmultiplesizegcerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
-        res.status.should.to.equal(400);
+        res.status.should.to.equal(500);
       });
   });
 });
