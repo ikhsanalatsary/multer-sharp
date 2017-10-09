@@ -76,6 +76,55 @@ app.post('/uploadwithfilename', upload2.single('myPic'), (req, res, next) => {
     res.send('Successfully uploaded!');
 });
 
+/* If you need generate image with specific size
+ * simply to adding `sizes` property
+ * sizes must be an `array` and must be specify
+ * with suffix, width / height property
+ */
+const storage = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  sizes: [
+    { suffix: 'xlg', width: 1200, height: 1200 },
+    { suffix: 'lg', width: 800, height: 800 },
+    { suffix: 'md', width: 500, height: 500 },
+    { suffix: 'sm', width: 300, height: 300 },
+    { suffix: 'xs', width: 100 }
+  ],
+  max: true
+});
+const upload = multer({ storage });
+
+app.post('/uploadmultiplesize', upload.single('myPic'), (req, res, next) => {
+    console.log(req.file);
+    /*
+    * will print like this
+    {
+      originalname: 'nodejs-512.png',
+      encoding: '7bit',
+      mimetype: 'image/png',
+      md: {
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-md',
+        mimetype: 'image/png',
+        filename: '1b5866f356e455f6c84666e1ae50ea24'
+      },
+      sm: {
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-sm',
+        mimetype: 'image/png',
+        filename: '1b5866f356e455f6c84666e1ae50ea24'
+      },
+      xs: {
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-xs',
+        mimetype: 'image/png',
+        filename: '1b5866f356e455f6c84666e1ae50ea24'
+      }
+    }
+    */
+    res.send('Successfully uploaded!');
+});
+
 ```
 
 for more example you can see [here](https://github.com/ikhsanalatsary/multer-sharp/blob/master/test/implementation.test.js)
@@ -96,6 +145,7 @@ const storage = gcsSharp(options);
 | destination | emptyString | Optional, destination folder to store your file on Google Cloud Storage |
 | format | originalFileFormat | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', option: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
 | size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
+| sizes | no | an Array of size specification `object` for output image and specify diff size with suffix, as follow: `{ suffix: 'md', width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 
 #### sharp options
 Please visit this **[sharp](https://github.com/lovell/sharp)** for detailed overview of specific option.
