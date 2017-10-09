@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const includes = require('array-includes');
 const { lookup } = require('mime-types');
 const chalk = require('chalk');
-const mapSeries = require('async/map');
+const asyncMap = require('async/map');
 
 class MulterSharp {
   constructor(options) {
@@ -91,7 +91,7 @@ class MulterSharp {
               });
           };
 
-          mapSeries(sizes, eachUpload, (seriesErr, results) => {
+          asyncMap(sizes, eachUpload, (seriesErr, results) => {
             if (seriesErr) {
               return cb(seriesErr);
             }
@@ -103,7 +103,7 @@ class MulterSharp {
               mapArrayToObject[result.suffix].mimetype = result.mimetype;
               mapArrayToObject[result.suffix].filename = result.filename;
             });
-            cb(seriesErr, mapArrayToObject);
+            return cb(seriesErr, mapArrayToObject);
           });
         } else {
           stream
