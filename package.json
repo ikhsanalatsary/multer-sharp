@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
-    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js -R test"
+    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha -b -R -A test/*.test.js"
   },
   "repository": {
     "type": "git",
