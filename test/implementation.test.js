@@ -183,6 +183,36 @@ const storage8 = multerSharp({
 });
 const upload8 = multer({ storage: storage8 });
 
+const storage9 = multerSharp({
+  bucket: wrongConfig.uploads.gcsUpload.bucket,
+  projectId: wrongConfig.uploads.gcsUpload.projectId,
+  keyFilename: wrongConfig.uploads.gcsUpload.keyFilename,
+  sizes: [
+    // { suffix: 'xlg', width: 1200, height: 1200 },
+    // { suffix: 'lg', width: 800, height: 800 },
+    { suffix: 'md', width: 500, height: 500 },
+    { suffix: 'sm', width: 300, height: 300 },
+    { suffix: 'xs', width: 100, height: 100 }
+  ]
+});
+const upload9 = multer({ storage: storage9 });
+
+const storage10 = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  sizes: [
+    // { suffix: 'xlg', width: 1200, height: 1200 },
+    // { suffix: 'lg', width: 800, height: 800 },
+    { suffix: 'md', width: 500, height: 500 },
+    { suffix: 'sm', width: 300, height: 300 },
+    { suffix: 'xs', width: 100, height: 100 }
+  ],
+  extract: { left: 0, top: 2, width: 400, height: 400 }
+});
+const upload10 = multer({ storage: storage10 });
+
 // express setup
 app.get('/book', (req, res) => {
   res.sendStatus(200);
@@ -256,6 +286,23 @@ app.post('/uploadwithmultiplesize', upload8.single('myPic'), (req, res, next) =>
     res.sendStatus(200);
   }
   next();
+});
+
+app.post('/uploadwithmultiplesizetransformerror', (req, res) => {
+  const uploadAndError = upload9.single('myPic');
+  uploadAndError(req, res, (uploadError) => {
+    if (uploadError) {
+      res.status(400).json({ message: 'Something went wrong when resize' });
+    }
+  });
+});
+app.post('/uploadwithmultiplesizegcerror', (req, res) => {
+  const uploadAndError = upload10.single('myPic');
+  uploadAndError(req, res, (uploadError) => {
+    if (uploadError) {
+      res.status(400).json({ message: uploadError.Error });
+    }
+  });
 });
 
 // Run Test
@@ -380,7 +427,6 @@ describe('express', function describe() {
       });
   });
   it('return a req.file with multiple sizes', (done) => {
-    this.timeout(15000);
     setTimeout(done, 1000);
     supertest(app)
       .post('/uploadwithmultiplesize')
@@ -394,6 +440,25 @@ describe('express', function describe() {
         file.should.have.property('encoding');
         file.should.have.property('mimetype');
         file.should.have.property('originalname');
+      });
+  });
+  it('upload multisize and return error, cause transform/resize error', (done) => {
+    setTimeout(done, 10000);
+    supertest(app)
+      .post('/uploadwithmultiplesizetransformerror')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end((err, res) => {
+        res.status.should.to.equal(400);
+        res.body.message.should.to.equal('Something went wrong when resize');
+      });
+  });
+  it('upload multisize and return error, cause google cloud error', (done) => {
+    setTimeout(done, 10000);
+    supertest(app)
+      .post('/uploadwithmultiplesizegcerror')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end((err, res) => {
+        res.status.should.to.equal(400);
       });
   });
 });

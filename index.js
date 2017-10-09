@@ -93,8 +93,7 @@ class MulterSharp {
 
           mapSeries(sizes, eachUpload, (seriesErr, results) => {
             if (seriesErr) {
-              cb(seriesErr);
-              return;
+              return cb(seriesErr);
             }
             // do something
             const mapArrayToObject = {};
@@ -104,7 +103,7 @@ class MulterSharp {
               mapArrayToObject[result.suffix].mimetype = result.mimetype;
               mapArrayToObject[result.suffix].filename = result.filename;
             });
-            cb(null, mapArrayToObject);
+            cb(seriesErr, mapArrayToObject);
           });
         } else {
           stream
