@@ -106,19 +106,19 @@ app.post('/uploadmultiplesize', upload.single('myPic'), (req, res, next) => {
       encoding: '7bit',
       mimetype: 'image/png',
       md: {
-        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-md',
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-md',
         mimetype: 'image/png',
-        filename: '1b5866f356e455f6c84666e1ae50ea24'
+        filename: 'cd2105f5d60684a9f7c9fd2c340befed-md'
       },
       sm: {
-        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-sm',
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-sm',
         mimetype: 'image/png',
-        filename: '1b5866f356e455f6c84666e1ae50ea24'
+        filename: 'cd2105f5d60684a9f7c9fd2c340befed-sm'
       },
       xs: {
-        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/1b5866f356e455f6c84666e1ae50ea24-xs',
+        path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-xs',
         mimetype: 'image/png',
-        filename: '1b5866f356e455f6c84666e1ae50ea24'
+        filename: 'cd2105f5d60684a9f7c9fd2c340befed-xs'
       }
     }
     */
