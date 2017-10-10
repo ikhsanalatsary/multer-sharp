@@ -66,6 +66,7 @@ class MulterSharp {
           const { sizes } = this.options;
 
           const eachUpload = (size, done) => {
+            const filenameWithSuffix = `${filename}-${size.suffix}`;
             const gcNameBySuffix = `${gcName}-${size.suffix}`;
             gcFile = this.gcsBucket.file(gcNameBySuffix);
             this.options.size = size;
@@ -85,7 +86,7 @@ class MulterSharp {
                 return done(null, {
                   mimetype: getFormat(this.options.format) || file.mimetype,
                   path: uri,
-                  filename,
+                  filename: filenameWithSuffix,
                   suffix: size.suffix
                 });
               });
