@@ -61,8 +61,8 @@ class MulterSharp {
         const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
         let gcFile = this.gcsBucket.file(gcName);
         const stream = file.stream;
-        const resizerStream = transformer(this.options);
-        const writableStream = gcFile.createWriteStream(fileOptions);
+        let resizerStream = transformer(this.options);
+        let writableStream = gcFile.createWriteStream(fileOptions);
         const infoLogger = (info) => {
           /* eslint-disable no-console */
           console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
@@ -77,6 +77,8 @@ class MulterSharp {
             const gcNameBySuffix = `${gcName}-${size.suffix}`;
             gcFile = this.gcsBucket.file(gcNameBySuffix);
             this.options.size = size;
+            resizerStream = transformer(this.options);
+            writableStream = gcFile.createWriteStream(fileOptions);
 
             return new Promise((resolve, reject) => {
               resizerStream.on('info', infoLogger);
