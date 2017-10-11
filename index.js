@@ -61,6 +61,13 @@ class MulterSharp {
         const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
         let gcFile = this.gcsBucket.file(gcName);
         const stream = file.stream;
+        const resizerStream = transformer(this.options);
+        const writableStream = gcFile.createWriteStream(fileOptions);
+        const infoLogger = (info) => {
+          /* eslint-disable no-console */
+          console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
+          console.info(chalk.magenta(JSON.stringify(info)));
+        };
 
         if (this.options.sizes && Array.isArray(this.options.sizes) && this.options.sizes.length > 0) {
           const { sizes } = this.options;
@@ -72,25 +79,21 @@ class MulterSharp {
             this.options.size = size;
 
             return new Promise((resolve, reject) => {
-              stream
-                .pipe(transformer(this.options))
-                .on('info', (info) => {
-                  /* eslint-disable no-console */
-                  console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
-                  console.info(chalk.magenta(JSON.stringify(info)));
-                })
-                .on('error', reject)
-                .pipe(gcFile.createWriteStream(fileOptions))
-                .on('error', reject)
-                .on('finish', () => {
-                  const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
-                  resolve({
-                    mimetype: getFormat(this.options.format) || file.mimetype,
-                    path: uri,
-                    filename: filenameWithSuffix,
-                    suffix: size.suffix
-                  });
+              resizerStream.on('info', infoLogger);
+              resizerStream.on('error', reject);
+
+              writableStream.on('error', reject);
+              writableStream.on('finish', () => {
+                const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
+                resolve({
+                  mimetype: getFormat(this.options.format) || file.mimetype,
+                  path: uri,
+                  filename: filenameWithSuffix,
+                  suffix: size.suffix
                 });
+              });
+
+              stream.pipe(resizerStream).pipe(writableStream);
             });
           };
 
@@ -110,14 +113,10 @@ class MulterSharp {
             .catch(cb);
         } else {
           stream
-            .pipe(transformer(this.options))
-            .on('info', (info) => {
-              /* eslint-disable no-console */
-              console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
-              console.info(chalk.magenta(JSON.stringify(info)));
-            })
+            .pipe(resizerStream)
+            .on('info', infoLogger)
             .on('error', (transformErr) => cb(transformErr))
-            .pipe(gcFile.createWriteStream(fileOptions))
+            .pipe(writableStream)
             .on('error', (gcErr) => cb(gcErr))
             .on('finish', () => {
               const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
