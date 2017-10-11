@@ -19,8 +19,6 @@ matrix:
 cache:
   directories:
     - node_modules
-before_script:
-  - npm prune
 script:
   - npm run test
 after_success:
