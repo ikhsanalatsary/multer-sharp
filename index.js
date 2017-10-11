@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const includes = require('array-includes');
 const { lookup } = require('mime-types');
 const chalk = require('chalk');
-const asyncMap = require('async/map');
+const Promise = require('bluebird');
 
 class MulterSharp {
   constructor(options) {
@@ -65,53 +65,55 @@ class MulterSharp {
         if (this.options.sizes && Array.isArray(this.options.sizes) && this.options.sizes.length > 0) {
           const { sizes } = this.options;
 
-          const eachUpload = (size, done) => {
+          const eachUpload = (size) => {
             const filenameWithSuffix = `${filename}-${size.suffix}`;
             const gcNameBySuffix = `${gcName}-${size.suffix}`;
             gcFile = this.gcsBucket.file(gcNameBySuffix);
             this.options.size = size;
 
-            stream
-              .pipe(transformer(this.options))
-              .on('info', (info) => {
-                /* eslint-disable no-console */
-                console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
-                console.info(chalk.magenta(JSON.stringify(info)));
-              })
-              .on('error', (transformErr) => done(transformErr))
-              .pipe(gcFile.createWriteStream(fileOptions))
-              .on('error', (gcErr) => done(gcErr))
-              .on('finish', () => {
-                const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
-                return done(null, {
-                  mimetype: getFormat(this.options.format) || file.mimetype,
-                  path: uri,
-                  filename: filenameWithSuffix,
-                  suffix: size.suffix
+            return new Promise((resolve, reject) => {
+              stream
+                .pipe(transformer(this.options))
+                .on('info', (info) => {
+                  /* eslint-disable no-console */
+                  console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
+                  console.info(chalk.magenta(JSON.stringify(info)));
+                })
+                .on('error', reject)
+                .pipe(gcFile.createWriteStream(fileOptions))
+                .on('error', reject)
+                .on('finish', () => {
+                  const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
+                  resolve({
+                    mimetype: getFormat(this.options.format) || file.mimetype,
+                    path: uri,
+                    filename: filenameWithSuffix,
+                    suffix: size.suffix
+                  });
                 });
-              });
+            });
           };
 
-          asyncMap(sizes, eachUpload, (seriesErr, results) => {
-            if (seriesErr) {
-              return cb(seriesErr);
-            }
-            // do something
-            const mapArrayToObject = {};
-            results.forEach((result) => {
-              mapArrayToObject[result.suffix] = {};
-              mapArrayToObject[result.suffix].path = result.path;
-              mapArrayToObject[result.suffix].mimetype = result.mimetype;
-              mapArrayToObject[result.suffix].filename = result.filename;
-            });
-            return cb(seriesErr, mapArrayToObject);
-          });
+          Promise
+            .map(sizes, eachUpload)
+            .then((results) => {
+              // All resolve, do something
+              const mapArrayToObject = {};
+              results.forEach((result) => {
+                mapArrayToObject[result.suffix] = {};
+                mapArrayToObject[result.suffix].path = result.path;
+                mapArrayToObject[result.suffix].mimetype = result.mimetype;
+                mapArrayToObject[result.suffix].filename = result.filename;
+              });
+              cb(null, mapArrayToObject);
+            })
+            .catch(cb);
         } else {
           stream
             .pipe(transformer(this.options))
             .on('info', (info) => {
               /* eslint-disable no-console */
-              console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width} di else`));
+              console.info(chalk.green(`Image format is ${info.format}, Image height is ${info.height}, & Image width is ${info.width}`));
               console.info(chalk.magenta(JSON.stringify(info)));
             })
             .on('error', (transformErr) => cb(transformErr))

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
-    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha -b -R -A test/*.test.js"
+    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -64,7 +64,7 @@
   "dependencies": {
     "@google-cloud/storage": "^1.3.1",
     "array-includes": "3.0.3",
-    "async": "^2.5.0",
+    "bluebird": "^3.5.1",
     "chalk": "^2.1.0",
     "mime-types": "^2.1.17",
     "sharp": "^0.18.4"
