@@ -54,9 +54,11 @@ class MulterSharp {
 
         const fileOptions = {
           predefinedAcl: this.options.acl,
-          metadata: {
-            contentType: getFormat(this.options.format) || file.mimetype
-          }
+          metadata: Object.assign(
+            this.options.metadata,
+            { contentType: getFormat(this.options.format) || file.mimetype }
+          ),
+          gzip: this.options.gzip
         };
         const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
         let gcFile = this.gcsBucket.file(gcName);
@@ -172,7 +174,9 @@ MulterSharp.defaultOptions = {
   convolve: false,
   threshold: false,
   toColourspace: false,
-  toColorspace: false
+  toColorspace: false,
+  gzip: false,
+  metadata: {}
 };
 
 function getDestination(req, file, cb) {
