@@ -107,17 +107,14 @@ app.post('/uploadmultiplesize', upload.single('myPic'), (req, res, next) => {
       mimetype: 'image/png',
       md: {
         path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-md',
-        mimetype: 'image/png',
         filename: 'cd2105f5d60684a9f7c9fd2c340befed-md'
       },
       sm: {
         path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-sm',
-        mimetype: 'image/png',
         filename: 'cd2105f5d60684a9f7c9fd2c340befed-sm'
       },
       xs: {
         path: 'https://storage.googleapis.com/multer-sharp.appspot.com/cd2105f5d60684a9f7c9fd2c340befed-xs',
-        mimetype: 'image/png',
         filename: 'cd2105f5d60684a9f7c9fd2c340befed-xs'
       }
     }
@@ -142,6 +139,8 @@ const storage = gcsSharp(options);
 | projectId | no | Required your project id on Google Cloud Storage to upload |
 | keyFilename | no | Required JSON credentials file for Google Cloud Storage |
 | acl | 'private' | Required acl credentials file for Google Cloud Storage, value: `publicRead` or `private`, doc: https://cloud.google.com/storage/docs/access-control/lists |
+| gzip | no | @param {boolean} [options.gzip] Automatically gzip the file. This will set `options.metadata.contentEncoding` to `gzip`. |
+| metadata | no | @param {object} additional metadata |
 | destination | emptyString | Optional, destination folder to store your file on Google Cloud Storage |
 | format | originalFileFormat | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', option: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
 | size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
