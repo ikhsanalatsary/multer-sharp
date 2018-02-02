@@ -1,6 +1,6 @@
 {
   "name": "multer-sharp",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Streaming multer storage engine permit to resize and upload to Google Cloud Storage.",
   "main": "index.js",
   "scripts": {
@@ -40,13 +40,18 @@
     "form-data",
     "formdata",
     "express",
-    "middleware"
+    "middleware",
+    "firebase",
+    "firebase-storage",
+    "firebase-cloud-storage"
   ],
   "author": "Abdul Fattah Ikhsan <ikhsannetwork@gmail.com> (http://ikhsannetwork.com/)",
   "license": "MIT",
   "files": [
     "LICENSE",
     "README.md",
+    "lib/",
+    "config/",
     "index.js"
   ],
   "devDependencies": {
