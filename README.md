@@ -1,6 +1,7 @@
 # Multer-Sharp
 
 [ ![Codeship Status for ikhsanalatsary/multer-sharp](https://app.codeship.com/projects/aa56e710-0a47-0135-8b3c-6ed4d7e33e57/status?branch=master)](https://app.codeship.com/projects/214729) [![Build Status](https://travis-ci.org/ikhsanalatsary/multer-sharp.svg?branch=master)](https://travis-ci.org/ikhsanalatsary/multer-sharp) [![Code Climate](https://codeclimate.com/github/ikhsanalatsary/multer-sharp/badges/gpa.svg)](https://codeclimate.com/github/ikhsanalatsary/multer-sharp) [![codecov.io](https://codecov.io/gh/ikhsanalatsary/multer-sharp/coverage.svg?branch=master)](https://codecov.io/gh/ikhsanalatsary/multer-sharp?branch=master) [![Depedencies Status](https://david-dm.org/ikhsanalatsary/multer-sharp.svg)](https://david-dm.org/ikhsanalatsary/multer-sharp) [![devDepedencies Status](https://david-dm.org/ikhsanalatsary/multer-sharp/dev-status.svg)](https://david-dm.org/ikhsanalatsary/multer-sharp?type=dev)
+[![npm](https://img.shields.io/npm/dm/multer-sharp.svg)]()
 
 ***
 
