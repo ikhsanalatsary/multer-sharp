@@ -23,9 +23,6 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       node_js: "9"
-cache:
-  directories:
-    - node_modules
 script:
   - npm run test
 after_success:
