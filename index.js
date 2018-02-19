@@ -4,6 +4,7 @@ const gcloud = require('@google-cloud/storage');
 const Promise = require('bluebird');
 
 const defaultOptions = require('./config/default');
+const sharpOptions = require('./lib/get-sharp-options');
 const getDestination = require('./lib/get-destination');
 const getFilename = require('./lib/get-filename');
 const transformer = require('./lib/transformer');
@@ -32,39 +33,7 @@ class MulterSharp {
 
     this.options = Object.assign({}, MulterSharp.defaultOptions, options || {});
     this.getFilename = this.options.filename || getFilename;
-    const { resize, background, crop, embed, max, min, toFormat,
-    extract, trim, flatten, extend, negate, rotate, flip, flop, blur, sharpen, gamma,
-    grayscale, greyscale, normalize, normalise, convolve, threshold, toColourspace,
-    toColorspace, ignoreAspectRatio, withMetadata, withoutEnlargement } = this.options;
-    this.sharpOptions = { resize,
-      background,
-      crop,
-      embed,
-      max,
-      min,
-      toFormat,
-      extract,
-      trim,
-      flatten,
-      extend,
-      negate,
-      rotate,
-      flip,
-      flop,
-      blur,
-      sharpen,
-      gamma,
-      grayscale,
-      greyscale,
-      normalize,
-      normalise,
-      convolve,
-      threshold,
-      toColourspace,
-      toColorspace,
-      ignoreAspectRatio,
-      withMetadata,
-      withoutEnlargement };
+    this.sharpOptions = sharpOptions(this.options);
 
     if (typeof options.destination === 'string') {
       this.getDestination = ($0, $1, cb) => cb(null, options.destination);
