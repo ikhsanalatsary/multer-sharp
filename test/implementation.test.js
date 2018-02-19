@@ -96,9 +96,9 @@ const storage4 = multerSharp({
   gamma: 2.5,
   greyscale: true,
   normalize: true,
-  format: {
+  toFormat: {
     type: 'jpeg',
-    option: {
+    options: {
       progressive: true,
       quality: 90
     }
@@ -133,7 +133,7 @@ const storage5 = multerSharp({
   gamma: 2.5,
   grayscale: true,
   normalise: true,
-  format: 'jpeg',
+  toFormat: 'jpeg',
   withMetadata: {
     orientation: 4
   },

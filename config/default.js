@@ -30,6 +30,7 @@ module.exports = {
   threshold: false,
   toColourspace: false,
   toColorspace: false,
+  toFormat: false,
   gzip: false,
   metadata: {}
 };

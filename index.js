@@ -4,6 +4,7 @@ const gcloud = require('@google-cloud/storage');
 const Promise = require('bluebird');
 
 const defaultOptions = require('./config/default');
+const sharpOptions = require('./lib/get-sharp-options');
 const getDestination = require('./lib/get-destination');
 const getFilename = require('./lib/get-filename');
 const transformer = require('./lib/transformer');
@@ -32,6 +33,7 @@ class MulterSharp {
 
     this.options = Object.assign({}, MulterSharp.defaultOptions, options || {});
     this.getFilename = this.options.filename || getFilename;
+    this.sharpOptions = sharpOptions(this.options);
 
     if (typeof options.destination === 'string') {
       this.getDestination = ($0, $1, cb) => cb(null, options.destination);
@@ -58,14 +60,14 @@ class MulterSharp {
           predefinedAcl: this.options.acl,
           metadata: Object.assign(
             this.options.metadata,
-            { contentType: getFormat(this.options.format) || file.mimetype }
+            { contentType: getFormat(this.sharpOptions.toFormat) || file.mimetype }
           ),
           gzip: this.options.gzip
         };
         const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
         let gcFile = this.gcsBucket.file(gcName);
         const stream = file.stream;
-        let resizerStream = transformer(this.options);
+        let resizerStream = transformer(this.sharpOptions, this.options.size);
         let writableStream = gcFile.createWriteStream(fileOptions);
 
         if (this.options.sizes && Array.isArray(this.options.sizes) && this.options.sizes.length > 0) {
@@ -75,8 +77,7 @@ class MulterSharp {
             const filenameWithSuffix = `${filename}-${size.suffix}`;
             const gcNameBySuffix = `${gcName}-${size.suffix}`;
             gcFile = this.gcsBucket.file(gcNameBySuffix);
-            this.options.size = size;
-            resizerStream = transformer(this.options);
+            resizerStream = transformer(this.sharpOptions, size);
             writableStream = gcFile.createWriteStream(fileOptions);
 
             return new Promise((resolve, reject) => {
@@ -87,7 +88,7 @@ class MulterSharp {
               writableStream.on('finish', () => {
                 const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
                 resolve({
-                  mimetype: getFormat(this.options.format) || file.mimetype,
+                  mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
                   path: uri,
                   filename: filenameWithSuffix,
                   suffix: size.suffix
@@ -122,7 +123,7 @@ class MulterSharp {
             .on('finish', () => {
               const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
               return cb(null, {
-                mimetype: getFormat(this.options.format) || file.mimetype,
+                mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
                 path: uri,
                 filename
               });
