@@ -83,10 +83,8 @@ class MulterSharp {
   _handleFile(req, file, cb) {
     this.getDestination(req, file, (destErr, destination) => {
       if (destErr) cb(destErr);
-
       this.getFilename(req, file, (fileErr, filename) => {
         if (fileErr) cb(fileErr);
-
         const fileOptions = {
           predefinedAcl: this.options.acl,
           metadata: Object.assign(
@@ -100,25 +98,10 @@ class MulterSharp {
         const stream = file.stream;
         const resizerStream = transformer(this.sharpOptions, this.options.size);
         const writableStream = gcFile.createWriteStream(fileOptions);
-
         if (Array.isArray(this.options.sizes) && this.options.sizes.length > 0) {
-          const { sizes } = this.options;
-          this._uploadWithMultipleSize(sizes, file, filename, gcName, fileOptions, stream, cb);
+          this._uploadWithMultipleSize(this.options.sizes, file, filename, gcName, fileOptions, stream, cb);
         } else {
-          stream
-            .pipe(resizerStream)
-            .on('info', logger)
-            .on('error', (transformErr) => cb(transformErr))
-            .pipe(writableStream)
-            .on('error', (gcErr) => cb(gcErr))
-            .on('finish', () => {
-              const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
-              return cb(null, {
-                mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
-                path: uri,
-                filename
-              });
-            });
+          this._uploadOne(stream, file, filename, gcName, resizerStream, writableStream, cb);
         }
       });
     });
@@ -131,6 +114,23 @@ class MulterSharp {
       const gcFile = this.gcsBucket.file(gcName);
       gcFile.delete(cb);
     });
+  }
+
+  _uploadOne(stream, file, filename, gcName, resizerStream, writableStream, cb) {
+    stream
+      .pipe(resizerStream)
+      .on('info', logger)
+      .on('error', (transformErr) => cb(transformErr))
+      .pipe(writableStream)
+      .on('error', (gcErr) => cb(gcErr))
+      .on('finish', () => {
+        const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
+        return cb(null, {
+          mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
+          path: uri,
+          filename
+        });
+      });
   }
 
   _uploadWithMultipleSize(sizes, file, filename, gcName, fileOptions, stream, cb) {
