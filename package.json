@@ -1,6 +1,6 @@
 {
   "name": "multer-sharp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Streaming multer storage engine permit to resize and upload to Google Cloud Storage.",
   "main": "index.js",
   "scripts": {
@@ -68,7 +68,6 @@
   },
   "dependencies": {
     "@google-cloud/storage": "1.5.2",
-    "array-includes": "3.0.3",
     "bluebird": "3.5.1",
     "chalk": "2.3.0",
     "mime-types": "2.1.17",
