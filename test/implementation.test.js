@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable no-console */
+
 const express = require('express');
 const supertest = require('supertest');
 const multer = require('multer');
@@ -326,6 +328,7 @@ describe('express', function describe() {
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
+        console.log(file);
         file.should.have.property('path');
         file.should.have.property('filename');
         file.should.have.property('fieldname');
@@ -343,6 +346,7 @@ describe('express', function describe() {
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
+        console.log(file);
         file.should.have.property('path');
         file.should.have.property('filename');
         file.should.have.property('fieldname');
@@ -361,6 +365,7 @@ describe('express', function describe() {
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
+        console.log(file);
         file.should.have.property('path');
         file.should.have.property('filename');
         file.should.have.property('fieldname');
@@ -379,6 +384,7 @@ describe('express', function describe() {
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
+        console.log(file);
         file.should.have.property('path');
         file.should.have.property('filename');
         file.should.have.property('fieldname');
@@ -429,6 +435,7 @@ describe('express', function describe() {
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
+        console.log(file);
         file.should.have.property('md');
         file.should.have.property('sm');
         file.should.have.property('xs');
