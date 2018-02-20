@@ -143,7 +143,6 @@ const storage = gcsSharp(options);
 | gzip | no | @param {boolean} [options.gzip] Automatically gzip the file. This will set `options.metadata.contentEncoding` to `gzip`. |
 | metadata | no | @param {object} additional metadata |
 | destination | emptyString | Optional, destination folder to store your file on Google Cloud Storage |
-| format | originalFileFormat | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', option: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
 | size | no | size specification `object` for output image, as follow: `{ width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 | sizes | no | an Array of size specification `object` for output image and specify diff size with suffix, as follow: `{ suffix: 'md', width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 
@@ -179,6 +178,7 @@ multer-sharp embraces sharp option, as table below:
 | convolve | false | Convolve the image with the specified kernel.
 | threshold | false | Any pixel value greather than or equal to the threshold value will be set to 255, otherwise it will be set to 0
 | toColourspace *or* toColorspace | false | Set the output colourspace. By default output image will be web-friendly sRGB, with additional channels interpreted as alpha channels.
+| toFormat | false | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', options: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
 ***
 
 ## License
