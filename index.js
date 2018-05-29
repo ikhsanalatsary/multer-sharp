@@ -46,10 +46,6 @@ class MulterSharp {
     if (!options.projectId) {
       throw new Error('You have to specify project id for Google Cloud Storage to work.');
     }
-
-    if (!options.keyFilename) {
-      throw new Error('You have to specify credentials key file for Google Cloud Storage to work.');
-    }
   }
 
   _eachUpload(file, filename, gcName, fileOptions, stream) {
