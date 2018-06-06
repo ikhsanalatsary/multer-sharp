@@ -137,7 +137,7 @@ const storage = gcsSharp(options);
 | option | default | role |
 | ------ | ------- | ---- |
 | filename | randomString | your output filename |
-| bucket | no | Required your bucket name on Google Cloud Storage to upload. Environment varialbe - GCS_BUCKET |
+| bucket | no | Required your bucket name on Google Cloud Storage to upload. Environment variable - GCS_BUCKET |
 | projectId | no | Required your project id on Google Cloud Storage to upload. Environment variable - GC_PROJECT |
 | keyFilename | no | JSON credentials file for Google Cloud Storage. Environment variable - GCS_KEYFILE or [default google cloud credentials](https://cloud.google.com/docs/authentication/production) |
 | acl | 'private' | Required acl credentials file for Google Cloud Storage, value: `publicRead` or `private`, doc: https://cloud.google.com/storage/docs/access-control/lists |
