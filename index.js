@@ -15,7 +15,7 @@ class MulterSharp {
   constructor(options) {
     /* eslint-disable no-param-reassign, no-underscore-dangle */
     options.bucket = options.bucket || process.env.GCS_BUCKET || null;
-    options.projectId = options.projectId || process.env.GCLOUD_PROJECT || null;
+    options.projectId = options.projectId || process.env.GC_PROJECT || null;
     options.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
 
     this._check(options);
@@ -45,10 +45,6 @@ class MulterSharp {
 
     if (!options.projectId) {
       throw new Error('You have to specify project id for Google Cloud Storage to work.');
-    }
-
-    if (!options.keyFilename) {
-      throw new Error('You have to specify credentials key file for Google Cloud Storage to work.');
     }
   }
 

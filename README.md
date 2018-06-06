@@ -43,9 +43,9 @@ const app = express();
 const storage = gcsSharp({
     bucket: 'YOUR_BUCKET', // Required : bucket name to upload
     projectId: 'YOUR_PROJECTID', // Required : Google project ID
-    keyFilename: 'YOUR_KEYFILENAME', // Required : JSON credentials file for Google Cloud Storage
+    keyFilename: 'YOUR_KEYFILENAME', // Optional : JSON credentials file for Google Cloud Storage
     destination: 'public/image', // Optional : destination folder to store your file on Google Cloud Storage, default: ''
-    acl: 'publicRead' // Required : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
+    acl: 'publicRead' // Optional : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
 });
 const upload = multer({ storage });
 
@@ -63,8 +63,8 @@ const storage2 = gcsSharp({
   },
   bucket: 'YOUR_BUCKET', // Required : bucket name to upload
   projectId: 'YOUR_PROJECTID', // Required : Google project ID
-  keyFilename: 'YOUR_KEYFILENAME', // Required : JSON credentials file for Google Cloud Storage
-  acl: 'publicRead', // Required : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
+  keyFilename: 'YOUR_KEYFILENAME', // Optional : JSON credentials file for Google Cloud Storage
+  acl: 'publicRead', // Optional : acl credentials file for Google Cloud Storage, 'publicrRead' or 'private', default: 'private'
   size: {
     width: 400,
     height: 400
@@ -137,9 +137,9 @@ const storage = gcsSharp(options);
 | option | default | role |
 | ------ | ------- | ---- |
 | filename | randomString | your output filename |
-| bucket | no | Required your bucket name on Google Cloud Storage to upload |
-| projectId | no | Required your project id on Google Cloud Storage to upload |
-| keyFilename | no | Required JSON credentials file for Google Cloud Storage |
+| bucket | no | Required your bucket name on Google Cloud Storage to upload. Environment variable - GCS_BUCKET |
+| projectId | no | Required your project id on Google Cloud Storage to upload. Environment variable - GC_PROJECT |
+| keyFilename | no | JSON credentials file for Google Cloud Storage. Environment variable - GCS_KEYFILE or [default google cloud credentials](https://cloud.google.com/docs/authentication/production) |
 | acl | 'private' | Required acl credentials file for Google Cloud Storage, value: `publicRead` or `private`, doc: https://cloud.google.com/storage/docs/access-control/lists |
 | gzip | no | @param {boolean} [options.gzip] Automatically gzip the file. This will set `options.metadata.contentEncoding` to `gzip`. |
 | metadata | no | @param {object} additional metadata |

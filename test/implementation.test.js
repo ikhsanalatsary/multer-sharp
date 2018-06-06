@@ -481,11 +481,11 @@ describe('Multer-Sharp', () => {
     })).to.throw('You have to specify project id for Google Cloud Storage to work.');
     done();
   });
-  it('should throw an error, cause keyFilename is not specify', (done) => {
+  it('should work without keyFilename specified', (done) => {
     expect(multerSharp.bind(multerSharp, {
       bucket: config.uploads.gcsUpload.bucket,
       projectId: config.uploads.gcsUpload.projectId
-    })).to.throw('You have to specify credentials key file for Google Cloud Storage to work.');
+    })).to.not.throw('You have to specify credentials key file for Google Cloud Storage to work.');
     done();
   });
 });
