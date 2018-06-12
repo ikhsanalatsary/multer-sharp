@@ -5,14 +5,11 @@
 const express = require('express');
 const supertest = require('supertest');
 const multer = require('multer');
-const chai = require('chai');
 
-const expect = chai.expect;
 const multerSharp = require('../index');
 const config = require('./config');
 
 const app = express();
-const should = chai.should(); // eslint-disable-line no-unused-vars
 const wrongConfig = {
   uploads: {
     gcsUpload: {
@@ -304,164 +301,156 @@ app.post('/uploadwithmultiplesizegcerror', upload10.single('myPic'), (req, res) 
 });
 
 // Run Test
-describe('express', function describe() {
-  this.timeout(15000);
+describe('express', () => {
+//   this.timeout(15000);
   it('initial server', (done) => {
     supertest(app)
       .get('/book')
-      .end((err, res) => {
-        res.status.should.to.equal(200);
-        done();
-      });
+      .expect(200, done);
   });
   it('successfully uploads a file', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
-      .expect(200);
+      .expect(200, done);
   });
   it('returns a req.file with the Google Cloud Storage filename and path', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
         console.log(file);
-        file.should.have.property('path');
-        file.should.have.property('filename');
-        file.should.have.property('fieldname');
-        file.should.have.property('encoding');
-        file.should.have.property('mimetype');
-        file.should.have.property('originalname');
-        file.fieldname.should.have.string('myPic');
-        file.path.should.have.string('googleapis');
+        expect(file).toHaveProperty('path');
+        expect(file).toHaveProperty('filename');
+        expect(file).toHaveProperty('fieldname');
+        expect(file).toHaveProperty('encoding');
+        expect(file).toHaveProperty('mimetype');
+        expect(file).toHaveProperty('originalname');
+        expect(file.fieldname).toMatch('myPic');
+        expect(file.path).toMatch('googleapis');
+        done();
       });
   });
   it('return a req.file with the optional filename', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithfilename')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
         console.log(file);
-        file.should.have.property('path');
-        file.should.have.property('filename');
-        file.should.have.property('fieldname');
-        file.should.have.property('encoding');
-        file.should.have.property('mimetype');
-        file.should.have.property('originalname');
-        file.fieldname.should.have.string('myPic');
-        file.filename.should.to.equal('myPic-newFilename');
-        file.path.should.have.string('googleapis');
+        expect(file).toHaveProperty('path');
+        expect(file).toHaveProperty('filename');
+        expect(file).toHaveProperty('fieldname');
+        expect(file).toHaveProperty('encoding');
+        expect(file).toHaveProperty('mimetype');
+        expect(file).toHaveProperty('originalname');
+        expect(file.filename).toEqual('myPic-newFilename');
+        expect(file.fieldname).toMatch('myPic');
+        expect(file.path).toMatch('googleapis');
+        done();
       });
   });
   it('return a req.file with the optional destination', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithdestination')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
         console.log(file);
-        file.should.have.property('path');
-        file.should.have.property('filename');
-        file.should.have.property('fieldname');
-        file.should.have.property('encoding');
-        file.should.have.property('mimetype');
-        file.should.have.property('originalname');
-        file.fieldname.should.have.string('myPic');
-        file.path.should.have.string(config.uploads.gcsUpload.destination);
-        file.path.should.have.string('googleapis');
+        expect(file).toHaveProperty('path');
+        expect(file).toHaveProperty('filename');
+        expect(file).toHaveProperty('fieldname');
+        expect(file).toHaveProperty('encoding');
+        expect(file).toHaveProperty('mimetype');
+        expect(file).toHaveProperty('originalname');
+        expect(file.fieldname).toMatch('myPic');
+        expect(file.path).toMatch(config.uploads.gcsUpload.destination);
+        expect(file.path).toMatch('googleapis');
+        done();
       });
   });
   it('return a req.file with mimetype image/jpeg', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadconverttojpeg')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
         console.log(file);
-        file.should.have.property('path');
-        file.should.have.property('filename');
-        file.should.have.property('fieldname');
-        file.should.have.property('encoding');
-        file.should.have.property('mimetype');
-        file.should.have.property('originalname');
-        file.fieldname.should.have.string('myPic');
-        file.mimetype.should.have.string('image/jpeg');
-        file.path.should.have.string(config.uploads.gcsUpload.destination);
-        file.path.should.have.string('googleapis');
+        expect(file).toHaveProperty('path');
+        expect(file).toHaveProperty('filename');
+        expect(file).toHaveProperty('fieldname');
+        expect(file).toHaveProperty('encoding');
+        expect(file).toHaveProperty('mimetype');
+        expect(file).toHaveProperty('originalname');
+        expect(file.fieldname).toMatch('myPic');
+        expect(file.mimetype).toMatch('image/jpeg');
+        expect(file.path).toMatch(config.uploads.gcsUpload.destination);
+        expect(file.path).toMatch('googleapis');
+        done();
       });
   });
   it('upload and delete after', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadanddelete')
       .attach('myPic', 'test/nodejs-512.png')
-      .expect(200)
-      .end((err, res) => {
-        if (err) done(err);
-        res.status.should.to.equal(200);
-      });
+      .expect(200, done);
   });
   it('upload and return error, cause transform/resize error', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithtransformerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
-        res.status.should.to.equal(400);
-        res.body.message.should.to.equal('Something went wrong when resize');
+        expect(res.status).toEqual(400);
+        expect(res.body.message).toEqual('Something went wrong when resize');
+        done();
       });
   });
   it('upload and return error, cause google cloud error', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithgcserror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
-        res.status.should.to.equal(404);
-        res.body.message.should.to.equal('Not Found');
+        expect(res.status).toEqual(404);
+        expect(res.body.message).toEqual('Not Found');
+        done();
       });
   });
   it('return a req.file with multiple sizes', (done) => {
-    setTimeout(done, 1000);
+    // jest.setTimeout(done, 1000);
     supertest(app)
       .post('/uploadwithmultiplesize')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
         const file = lastReq.file;
         console.log(file);
-        file.should.have.property('md');
-        file.should.have.property('sm');
-        file.should.have.property('xs');
-        file.should.have.property('fieldname');
-        file.should.have.property('encoding');
-        file.should.have.property('mimetype');
-        file.should.have.property('originalname');
+        expect(file).toHaveProperty('md');
+        expect(file).toHaveProperty('sm');
+        expect(file).toHaveProperty('xs');
+        expect(file).toHaveProperty('fieldname');
+        expect(file).toHaveProperty('encoding');
+        expect(file).toHaveProperty('mimetype');
+        expect(file).toHaveProperty('originalname');
+        done();
       });
   });
   it('upload multisize and return error, cause transform/resize error', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithmultiplesizetransformerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
-        res.status.should.to.equal(400);
-        res.body.message.should.to.equal('Something went wrong when resize');
+        expect(res.status).toEqual(400);
+        expect(res.body.message).toEqual('Something went wrong when resize');
+        done();
       });
   });
   it('upload multisize and return error, cause google cloud error', (done) => {
-    setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithmultiplesizegcerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
-        res.status.should.to.equal(500);
+        expect(res.status).toEqual(500);
+        done();
       });
   });
 });
@@ -471,21 +460,21 @@ describe('Multer-Sharp', () => {
     expect(multerSharp.bind(multerSharp, {
       projectId: config.uploads.gcsUpload.projectId,
       keyFilename: config.uploads.gcsUpload.keyFilename
-    })).to.throw('You have to specify bucket for Google Cloud Storage to work.');
+    })).toThrow('You have to specify bucket for Google Cloud Storage to work.');
     done();
   });
   it('should throw an error, cause projectId is not specify', (done) => {
     expect(multerSharp.bind(multerSharp, {
       bucket: config.uploads.gcsUpload.bucket,
       keyFilename: config.uploads.gcsUpload.keyFilename
-    })).to.throw('You have to specify project id for Google Cloud Storage to work.');
+    })).toThrow('You have to specify project id for Google Cloud Storage to work.');
     done();
   });
   it('should work without keyFilename specified', (done) => {
     expect(multerSharp.bind(multerSharp, {
       bucket: config.uploads.gcsUpload.bucket,
       projectId: config.uploads.gcsUpload.projectId
-    })).to.not.throw('You have to specify credentials key file for Google Cloud Storage to work.');
+    })).not.toThrow('You have to specify credentials key file for Google Cloud Storage to work.');
     done();
   });
 });

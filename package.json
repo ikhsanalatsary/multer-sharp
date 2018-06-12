@@ -1,11 +1,12 @@
 {
   "name": "multer-sharp",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Streaming multer storage engine permit to resize and upload to Google Cloud Storage.",
   "main": "index.js",
   "scripts": {
     "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
-    "test": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js"
+    "test:old": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js",
+    "test": "jest --forceExit --coverage"
   },
   "repository": {
     "type": "git",
@@ -55,23 +56,24 @@
     "index.js"
   ],
   "devDependencies": {
-    "chai": "^4.1.2",
     "codecov.io": "0.1.6",
     "eslint": "3.19.0",
     "eslint-config-airbnb-base": "11.2.0",
     "eslint-plugin-import": "2.3.0",
     "express": "4.16.2",
-    "istanbul": "0.4.5",
-    "mocha": "3.4.2",
+    "jest": "^23.1.0",
     "multer": "1.3.0",
     "supertest": "3.0.0"
   },
   "dependencies": {
-    "@google-cloud/storage": "1.5.2",
+    "@google-cloud/storage": "^1.7.0",
     "bluebird": "3.5.1",
     "chalk": "2.3.0",
     "mime-types": "2.1.17",
     "object.entries": "1.0.4",
-    "sharp": "0.19.0"
+    "sharp": "^0.20.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
