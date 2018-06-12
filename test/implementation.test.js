@@ -301,7 +301,7 @@ app.post('/uploadwithmultiplesizegcerror', upload10.single('myPic'), (req, res) 
 });
 
 // Run Test
-describe('express', function describe() {
+describe('express', () => {
 //   this.timeout(15000);
   it('initial server', (done) => {
     supertest(app)
@@ -309,14 +309,12 @@ describe('express', function describe() {
       .expect(200, done);
   });
   it('successfully uploads a file', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
       .expect(200, done);
   });
   it('returns a req.file with the Google Cloud Storage filename and path', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
@@ -335,7 +333,6 @@ describe('express', function describe() {
       });
   });
   it('return a req.file with the optional filename', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithfilename')
       .attach('myPic', 'test/nodejs-512.png')
@@ -355,7 +352,6 @@ describe('express', function describe() {
       });
   });
   it('return a req.file with the optional destination', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithdestination')
       .attach('myPic', 'test/nodejs-512.png')
@@ -375,7 +371,6 @@ describe('express', function describe() {
       });
   });
   it('return a req.file with mimetype image/jpeg', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadconverttojpeg')
       .attach('myPic', 'test/nodejs-512.png')
@@ -396,14 +391,12 @@ describe('express', function describe() {
       });
   });
   it('upload and delete after', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadanddelete')
       .attach('myPic', 'test/nodejs-512.png')
-      .expect(200, done)
+      .expect(200, done);
   });
   it('upload and return error, cause transform/resize error', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithtransformerror')
       .attach('myPic', 'test/nodejs-512.png')
@@ -414,7 +407,6 @@ describe('express', function describe() {
       });
   });
   it('upload and return error, cause google cloud error', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithgcserror')
       .attach('myPic', 'test/nodejs-512.png')
@@ -443,7 +435,6 @@ describe('express', function describe() {
       });
   });
   it('upload multisize and return error, cause transform/resize error', (done) => {
-    // // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithmultiplesizetransformerror')
       .attach('myPic', 'test/nodejs-512.png')
@@ -454,7 +445,6 @@ describe('express', function describe() {
       });
   });
   it('upload multisize and return error, cause google cloud error', (done) => {
-    // jest.setTimeout(done, 10000);
     supertest(app)
       .post('/uploadwithmultiplesizegcerror')
       .attach('myPic', 'test/nodejs-512.png')
