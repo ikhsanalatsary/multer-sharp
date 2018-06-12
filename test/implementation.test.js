@@ -82,7 +82,7 @@ const storage4 = multerSharp({
   acl: config.uploads.gcsUpload.acl,
   destination: config.uploads.gcsUpload.destination,
   size: { width: 200 },
-  crop: 'north',
+  crop: 16, // crop strategy
   background: { r: 0, g: 0, b: 100, alpha: 0 },
   withoutEnlargement: true,
   ignoreAspectRatio: true,
