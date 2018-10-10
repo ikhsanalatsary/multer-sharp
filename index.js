@@ -1,6 +1,6 @@
 'use strict';
 
-const { Storage } = require('@google-cloud/storage');
+const gcloud = require('@google-cloud/storage');
 const Promise = require('bluebird');
 
 const defaultOptions = require('./config/default');
@@ -30,7 +30,7 @@ class MulterSharp {
       this.getDestination = options.destination || getDestination;
     }
 
-    this.gcStorage = new Storage({
+    this.gcStorage = gcloud({
       projectId: options.projectId,
       keyFilename: options.keyFilename
     });
