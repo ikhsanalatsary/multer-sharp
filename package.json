@@ -6,7 +6,7 @@
   "scripts": {
     "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
     "test:old": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js",
-    "test": "jest --detectOpenHandles --coverage --ci"
+    "test": "jest --forceExit --coverage --ci"
   },
   "repository": {
     "type": "git",
