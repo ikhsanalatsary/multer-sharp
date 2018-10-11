@@ -1,6 +1,6 @@
 'use strict';
 
-const { Storage } = require('@google-cloud/storage');
+const gcloud = require('@google-cloud/storage');
 const Promise = require('bluebird');
 
 const defaultOptions = require('./config/default');
@@ -16,7 +16,8 @@ class MulterSharp {
     /* eslint-disable no-param-reassign, no-underscore-dangle */
     options.bucket = options.bucket || process.env.GCS_BUCKET || null;
     options.projectId = options.projectId || process.env.GC_PROJECT || null;
-    options.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
+    options.keyFilename =
+      options.keyFilename || process.env.GCS_KEYFILE || null;
 
     this._check(options);
 
@@ -30,7 +31,7 @@ class MulterSharp {
       this.getDestination = options.destination || getDestination;
     }
 
-    this.gcStorage = new Storage({
+    this.gcStorage = gcloud({
       projectId: options.projectId,
       keyFilename: options.keyFilename
     });
@@ -40,11 +41,15 @@ class MulterSharp {
 
   _check(options) {
     if (!options.bucket) {
-      throw new Error('You have to specify bucket for Google Cloud Storage to work.');
+      throw new Error(
+        'You have to specify bucket for Google Cloud Storage to work.'
+      );
     }
 
     if (!options.projectId) {
-      throw new Error('You have to specify project id for Google Cloud Storage to work.');
+      throw new Error(
+        'You have to specify project id for Google Cloud Storage to work.'
+      );
     }
   }
 
@@ -62,7 +67,11 @@ class MulterSharp {
 
         writableStream.on('error', reject);
         writableStream.on('finish', () => {
-          const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcNameBySuffix}`);
+          const uri = encodeURI(
+            `https://storage.googleapis.com/${
+              this.options.bucket
+            }/${gcNameBySuffix}`
+          );
           resolve({
             mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
             path: uri,
@@ -83,21 +92,42 @@ class MulterSharp {
         if (fileErr) cb(fileErr);
         const fileOptions = {
           predefinedAcl: this.options.acl,
-          metadata: Object.assign(
-            this.options.metadata,
-            { contentType: getFormat(this.sharpOptions.toFormat) || file.mimetype }
-          ),
+          metadata: Object.assign(this.options.metadata, {
+            contentType: getFormat(this.sharpOptions.toFormat) || file.mimetype
+          }),
           gzip: this.options.gzip
         };
-        const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${filename}` : filename;
+        const gcName =
+          typeof destination === 'string' && destination.length > 0
+            ? `${destination}/${filename}`
+            : filename;
         const gcFile = this.gcsBucket.file(gcName);
         const stream = file.stream;
         const resizerStream = transformer(this.sharpOptions, this.options.size);
         const writableStream = gcFile.createWriteStream(fileOptions);
-        if (Array.isArray(this.options.sizes) && this.options.sizes.length > 0) {
-          this._uploadWithMultipleSize(this.options.sizes, file, filename, gcName, fileOptions, stream, cb);
+        if (
+          Array.isArray(this.options.sizes) &&
+          this.options.sizes.length > 0
+        ) {
+          this._uploadWithMultipleSize(
+            this.options.sizes,
+            file,
+            filename,
+            gcName,
+            fileOptions,
+            stream,
+            cb
+          );
         } else {
-          this._uploadOne(stream, file, filename, gcName, resizerStream, writableStream, cb);
+          this._uploadOne(
+            stream,
+            file,
+            filename,
+            gcName,
+            resizerStream,
+            writableStream,
+            cb
+          );
         }
       });
     });
@@ -106,13 +136,24 @@ class MulterSharp {
   _removeFile(req, file, cb) {
     this.getDestination(req, file, (destErr, destination) => {
       if (destErr) cb(destErr);
-      const gcName = typeof destination === 'string' && destination.length > 0 ? `${destination}/${file.filename}` : file.filename;
+      const gcName =
+        typeof destination === 'string' && destination.length > 0
+          ? `${destination}/${file.filename}`
+          : file.filename;
       const gcFile = this.gcsBucket.file(gcName);
       gcFile.delete(cb);
     });
   }
 
-  _uploadOne(stream, file, filename, gcName, resizerStream, writableStream, cb) {
+  _uploadOne(
+    stream,
+    file,
+    filename,
+    gcName,
+    resizerStream,
+    writableStream,
+    cb
+  ) {
     stream
       .pipe(resizerStream)
       .on('info', logger)
@@ -120,7 +161,9 @@ class MulterSharp {
       .pipe(writableStream)
       .on('error', (gcErr) => cb(gcErr))
       .on('finish', () => {
-        const uri = encodeURI(`https://storage.googleapis.com/${this.options.bucket}/${gcName}`);
+        const uri = encodeURI(
+          `https://storage.googleapis.com/${this.options.bucket}/${gcName}`
+        );
         return cb(null, {
           mimetype: getFormat(this.sharpOptions.toFormat) || file.mimetype,
           path: uri,
@@ -129,9 +172,19 @@ class MulterSharp {
       });
   }
 
-  _uploadWithMultipleSize(sizes, file, filename, gcName, fileOptions, stream, cb) {
-    Promise
-      .map(sizes, this._eachUpload(file, filename, gcName, fileOptions, stream))
+  _uploadWithMultipleSize(
+    sizes,
+    file,
+    filename,
+    gcName,
+    fileOptions,
+    stream,
+    cb
+  ) {
+    Promise.map(
+      sizes,
+      this._eachUpload(file, filename, gcName, fileOptions, stream)
+    )
       .then((results) => {
         // All resolve, do something
         const mapArrayToObject = results.reduce((acc, curr) => {
