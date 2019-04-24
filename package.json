@@ -57,24 +57,24 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "@types/google-cloud__storage": "^1.7.2",
-    "@types/sharp": "^0.17.10",
+    "@types/google-cloud__storage": "^2.3.0",
+    "@types/sharp": "^0.22.1",
     "codecov": "^3.1.0",
-    "eslint": "3.19.0",
-    "eslint-config-airbnb-base": "11.2.0",
+    "eslint": "5.16.0",
+    "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "express": "4.16.3",
-    "jest": "^23.1.0",
-    "multer": "1.4.0",
-    "supertest": "3.3.0"
+    "express": "4.16.4",
+    "jest": "^24.7.1",
+    "multer": "1.4.1",
+    "supertest": "4.0.2"
   },
   "dependencies": {
-    "@google-cloud/storage": "1.7.0",
-    "bluebird": "3.5.2",
-    "chalk": "2.3.0",
-    "mime-types": "2.1.20",
-    "object.entries": "1.0.4",
-    "sharp": "0.20.8"
+    "@google-cloud/storage": "2.5.0",
+    "bluebird": "3.5.4",
+    "chalk": "2.4.2",
+    "mime-types": "2.1.24",
+    "object.entries": "1.1.0",
+    "sharp": "0.22.0"
   },
   "jest": {
     "testEnvironment": "node"
