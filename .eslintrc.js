@@ -41,5 +41,8 @@ module.exports = {
       "class-methods-use-this": 0,
       "no-useless-constructor": 0,
       "comma-dangle": ["error", "never"]
+    },
+    "globals": {
+      "expect": true
     }
 };

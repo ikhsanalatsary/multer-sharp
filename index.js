@@ -1,7 +1,10 @@
+/* eslint-disable func-names */
+
 'use strict';
 
 const gcloud = require('@google-cloud/storage');
 const Promise = require('bluebird');
+const { PassThrough } = require('stream');
 
 const defaultOptions = require('./config/default');
 const sharpOptions = require('./lib/get-sharp-options');
@@ -16,8 +19,7 @@ class MulterSharp {
     /* eslint-disable no-param-reassign, no-underscore-dangle */
     options.bucket = options.bucket || process.env.GCS_BUCKET || null;
     options.projectId = options.projectId || process.env.GC_PROJECT || null;
-    options.keyFilename =
-      options.keyFilename || process.env.GCS_KEYFILE || null;
+    options.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
 
     this._check(options);
 
@@ -58,14 +60,24 @@ class MulterSharp {
       const filenameWithSuffix = `${filename}-${size.suffix}`;
       const gcNameBySuffix = `${gcName}-${size.suffix}`;
       const gcFile = this.gcsBucket.file(gcNameBySuffix);
+      const streamCopy = new PassThrough();
       const resizerStream = transformer(this.sharpOptions, size);
       const writableStream = gcFile.createWriteStream(fileOptions);
+      stream.pipe(streamCopy);
 
       return new Promise((resolve, reject) => {
+        streamCopy.pipe(resizerStream).pipe(writableStream);
         resizerStream.on('info', logger);
-        resizerStream.on('error', reject);
+        resizerStream.on('error', function (transformErr) {
+          resizerStream.unpipe(writableStream);
+          this.end();
+          reject(transformErr);
+        });
 
-        writableStream.on('error', reject);
+        writableStream.on('error', function (gcErr) {
+          this.end();
+          reject(gcErr);
+        });
         writableStream.on('finish', () => {
           const uri = encodeURI(
             `https://storage.googleapis.com/${
@@ -79,8 +91,6 @@ class MulterSharp {
             suffix: size.suffix
           });
         });
-
-        stream.pipe(resizerStream).pipe(writableStream);
       });
     };
   }
@@ -97,17 +107,16 @@ class MulterSharp {
           }),
           gzip: this.options.gzip
         };
-        const gcName =
-          typeof destination === 'string' && destination.length > 0
-            ? `${destination}/${filename}`
-            : filename;
+        const gcName = typeof destination === 'string' && destination.length > 0
+          ? `${destination}/${filename}`
+          : filename;
         const gcFile = this.gcsBucket.file(gcName);
-        const stream = file.stream;
+        const { stream } = file;
         const resizerStream = transformer(this.sharpOptions, this.options.size);
         const writableStream = gcFile.createWriteStream(fileOptions);
         if (
-          Array.isArray(this.options.sizes) &&
-          this.options.sizes.length > 0
+          Array.isArray(this.options.sizes)
+          && this.options.sizes.length > 0
         ) {
           this._uploadWithMultipleSize(
             this.options.sizes,
@@ -136,10 +145,9 @@ class MulterSharp {
   _removeFile(req, file, cb) {
     this.getDestination(req, file, (destErr, destination) => {
       if (destErr) cb(destErr);
-      const gcName =
-        typeof destination === 'string' && destination.length > 0
-          ? `${destination}/${file.filename}`
-          : file.filename;
+      const gcName = typeof destination === 'string' && destination.length > 0
+        ? `${destination}/${file.filename}`
+        : file.filename;
       const gcFile = this.gcsBucket.file(gcName);
       gcFile.delete(cb);
     });
@@ -154,12 +162,19 @@ class MulterSharp {
     writableStream,
     cb
   ) {
-    stream
-      .pipe(resizerStream)
+    stream.pipe(resizerStream).pipe(writableStream);
+    resizerStream
       .on('info', logger)
-      .on('error', (transformErr) => cb(transformErr))
-      .pipe(writableStream)
-      .on('error', (gcErr) => cb(gcErr))
+      .on('error', function (transformErr) {
+        resizerStream.unpipe(writableStream);
+        cb(transformErr);
+        this.end();
+      });
+    writableStream
+      .on('error', function (gcErr) {
+        cb(gcErr);
+        this.end();
+      })
       .on('finish', () => {
         const uri = encodeURI(
           `https://storage.googleapis.com/${this.options.bucket}/${gcName}`
