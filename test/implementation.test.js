@@ -10,6 +10,7 @@ const multerSharp = require('../index');
 const config = require('./config');
 
 const app = express();
+const agent = supertest.agent(app);
 const wrongConfig = {
   uploads: {
     gcsUpload: {
@@ -80,12 +81,16 @@ const storage4 = multerSharp({
   destination: config.uploads.gcsUpload.destination,
   size: { width: 200 },
   crop: 16, // crop strategy
-  background: { r: 0, g: 0, b: 100, alpha: 0 },
+  background: {
+    r: 0, g: 0, b: 100, alpha: 0
+  },
   withoutEnlargement: true,
   ignoreAspectRatio: true,
   trim: 50,
   flatten: true,
-  extend: { top: 10, bottom: 20, left: 10, right: 10 },
+  extend: {
+    top: 10, bottom: 20, left: 10, right: 10
+  },
   negate: true,
   rotate: 90,
   flip: true,
@@ -113,16 +118,22 @@ const storage5 = multerSharp({
   destination: config.uploads.gcsUpload.destination,
   size: { width: 400, height: 400 },
   crop: 'north',
-  background: { r: 0, g: 0, b: 0, alpha: 0 },
+  background: {
+    r: 0, g: 0, b: 0, alpha: 0
+  },
   embed: true,
   max: true,
   min: true,
   withoutEnlargement: true,
   ignoreAspectRatio: true,
-  extract: { left: 0, top: 2, width: 50, height: 100 },
+  extract: {
+    left: 0, top: 2, width: 50, height: 100
+  },
   trim: 50,
   flatten: true,
-  extend: { top: 10, bottom: 20, left: 10, right: 10 },
+  extend: {
+    top: 10, bottom: 20, left: 10, right: 10
+  },
   negate: true,
   rotate: 90,
   flip: true,
@@ -156,7 +167,9 @@ const storage6 = multerSharp({
     height: 400
   },
   max: true,
-  extract: { left: 0, top: 2, width: 400, height: 400 }
+  extract: {
+    left: 0, top: 2, width: 400, height: 400
+  }
 });
 const upload6 = multer({ storage: storage6 });
 
@@ -181,6 +194,36 @@ const storage8 = multerSharp({
   ]
 });
 const upload8 = multer({ storage: storage8 });
+
+const storage11 = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  destination: 'uploadMultiArray',
+  sizes: [
+    // { suffix: 'xlg', width: 1200, height: 1200 },
+    // { suffix: 'lg', width: 800, height: 800 },
+    { suffix: 'md', width: 500, height: 500 },
+    { suffix: 'sm', width: 300, height: 300 },
+    { suffix: 'xs', width: 100, height: 100 }
+  ]
+});
+const upload11 = multer({ storage: storage11 });
+
+const storage12 = multerSharp({
+  bucket: config.uploads.gcsUpload.bucket,
+  projectId: config.uploads.gcsUpload.projectId,
+  keyFilename: config.uploads.gcsUpload.keyFilename,
+  acl: config.uploads.gcsUpload.acl,
+  destination: 'uploadArray',
+  size: {
+    width: 400,
+    height: 400
+  },
+  max: true
+});
+const upload12 = multer({ storage: storage12 });
 
 const storage9 = multerSharp({
   bucket: wrongConfig.uploads.gcsUpload.bucket,
@@ -208,7 +251,9 @@ const storage10 = multerSharp({
     { suffix: 'sm', width: 300, height: 300 },
     { suffix: 'xs', width: 100, height: 100 }
   ],
-  extract: { left: 0, top: 2, width: 400, height: 400 }
+  extract: {
+    left: 0, top: 2, width: 400, height: 400
+  }
 });
 const upload10 = multer({ storage: storage10 });
 
@@ -287,6 +332,26 @@ app.post('/uploadwithmultiplesize', upload8.single('myPic'), (req, res, next) =>
   next();
 });
 
+app.post('/uploadarraywithmultiplesize', upload11.array('myPic', 2), (req, res, next) => {
+  lastReq = req;
+  lastRes = res;
+
+  if (lastReq && lastReq.files) {
+    res.sendStatus(200);
+  }
+  next();
+});
+
+app.post('/uploadarray', upload12.array('myPic', 2), (req, res, next) => {
+  lastReq = req;
+  lastRes = res;
+
+  if (lastReq && lastReq.files) {
+    res.sendStatus(200);
+  }
+  next();
+});
+
 app.post('/uploadwithmultiplesizetransformerror', (req, res) => {
   const uploadAndError = upload9.single('myPic');
   uploadAndError(req, res, (uploadError) => {
@@ -304,22 +369,22 @@ app.post('/uploadwithmultiplesizegcerror', upload10.single('myPic'), (req, res) 
 describe('express', () => {
 //   this.timeout(15000);
   it('initial server', (done) => {
-    supertest(app)
+    agent
       .get('/book')
       .expect(200, done);
   });
   it('successfully uploads a file', (done) => {
-    supertest(app)
+    agent
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
       .expect(200, done);
   });
   it('returns a req.file with the Google Cloud Storage filename and path', (done) => {
-    supertest(app)
+    agent
       .post('/upload')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
-        const file = lastReq.file;
+        const { file } = lastReq;
         console.log(file);
         expect(file).toHaveProperty('path');
         expect(file).toHaveProperty('filename');
@@ -333,11 +398,11 @@ describe('express', () => {
       });
   });
   it('return a req.file with the optional filename', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithfilename')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
-        const file = lastReq.file;
+        const { file } = lastReq;
         console.log(file);
         expect(file).toHaveProperty('path');
         expect(file).toHaveProperty('filename');
@@ -352,11 +417,11 @@ describe('express', () => {
       });
   });
   it('return a req.file with the optional destination', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithdestination')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
-        const file = lastReq.file;
+        const { file } = lastReq;
         console.log(file);
         expect(file).toHaveProperty('path');
         expect(file).toHaveProperty('filename');
@@ -371,11 +436,11 @@ describe('express', () => {
       });
   });
   it('return a req.file with mimetype image/jpeg', (done) => {
-    supertest(app)
+    agent
       .post('/uploadconverttojpeg')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
-        const file = lastReq.file;
+        const { file } = lastReq;
         console.log(file);
         expect(file).toHaveProperty('path');
         expect(file).toHaveProperty('filename');
@@ -391,13 +456,13 @@ describe('express', () => {
       });
   });
   it('upload and delete after', (done) => {
-    supertest(app)
+    agent
       .post('/uploadanddelete')
       .attach('myPic', 'test/nodejs-512.png')
       .expect(200, done);
   });
   it('upload and return error, cause transform/resize error', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithtransformerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
@@ -407,7 +472,7 @@ describe('express', () => {
       });
   });
   it('upload and return error, cause google cloud error', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithgcserror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
@@ -418,12 +483,11 @@ describe('express', () => {
   });
   it('return a req.file with multiple sizes', (done) => {
     // jest.setTimeout(done, 1000);
-    supertest(app)
+    agent
       .post('/uploadwithmultiplesize')
       .attach('myPic', 'test/nodejs-512.png')
       .end(() => {
-        const file = lastReq.file;
-        console.log(file);
+        const { file } = lastReq;
         expect(file).toHaveProperty('md');
         expect(file).toHaveProperty('sm');
         expect(file).toHaveProperty('xs');
@@ -434,8 +498,34 @@ describe('express', () => {
         done();
       });
   });
+  it('return a req.files', (done) => {
+    // jest.setTimeout(done, 1000);
+    agent
+      .post('/uploadarray')
+      .attach('myPic', 'test/nodejs-512.png')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end(() => {
+        const file = lastReq.files;
+        console.log('files 1 ', file);
+        expect(file).toHaveLength(2);
+        done();
+      });
+  });
+  it('return a req.files with multiple sizes', (done) => {
+    // jest.setTimeout(done, 1000);
+    agent
+      .post('/uploadarraywithmultiplesize')
+      .attach('myPic', 'test/nodejs-512.png')
+      .attach('myPic', 'test/nodejs-512.png')
+      .end(() => {
+        const file = lastReq.files;
+        console.log('files 2 ', file);
+        expect(file).toHaveLength(2);
+        done();
+      });
+  });
   it('upload multisize and return error, cause transform/resize error', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithmultiplesizetransformerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
@@ -445,7 +535,7 @@ describe('express', () => {
       });
   });
   it('upload multisize and return error, cause google cloud error', (done) => {
-    supertest(app)
+    agent
       .post('/uploadwithmultiplesizegcerror')
       .attach('myPic', 'test/nodejs-512.png')
       .end((err, res) => {
