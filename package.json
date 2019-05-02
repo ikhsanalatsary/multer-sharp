@@ -57,7 +57,6 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "@types/google-cloud__storage": "^1.7.2",
     "@types/sharp": "^0.17.10",
     "codecov": "^3.3.0",
     "eslint": "5.16.0",
@@ -69,12 +68,16 @@
     "supertest": "4.0.2"
   },
   "dependencies": {
-    "@google-cloud/storage": "1.7.0",
+    "@google-cloud/storage": "2.5.0",
     "bluebird": "3.5.4",
     "chalk": "2.4.2",
     "mime-types": "2.1.24",
     "object.entries": "1.1.0",
     "sharp": "0.20.8"
+  },
+  "peerDependencies": {
+    "multer": "^1.4.1",
+    "sharp": ">= 0.170 <= 0.20.8"
   },
   "jest": {
     "testEnvironment": "node"
