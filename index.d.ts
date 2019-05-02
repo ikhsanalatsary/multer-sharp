@@ -1,48 +1,33 @@
-import { ResizeOptions, RGBA, Region, ExtendOptions, ThresholdOptions, AvailableFormatInfo, OutputOptions, JpegOptions, PngOptions, Metadata } from 'sharp';
+import { ResizeOptions, RGBA, Region, ExtendOptions, ThresholdOptions, AvailableFormatInfo, OutputOptions, JpegOptions, PngOptions, Metadata, Kernel } from 'sharp';
 import { UploadOptions } from '@google-cloud/storage';
 
-export interface Size {
+export declare interface Size {
     width?: number;
     height?: number;
     option?: ResizeOptions;
 }
 
-export interface Sharpen {
+export declare interface Sharpen {
     sigma?: number;
     flat?: number;
     jagged?: number;
 }
 
-export interface Threshold {
+export declare interface Threshold {
     threshold?: number;
     options?: ThresholdOptions;
 }
 
-export interface Format {
+export declare interface Format {
     type: string | AvailableFormatInfo;
-    options?: OutputOptions | JpegOptions | PngOptions; 
+    options?: OutputOptions | JpegOptions | PngOptions;
 }
 
-type SharpOption<T = string> = false | T;
+declare type SharpOption<T = string> = false | T;
 
-interface CloudStorageSize {
-    suffix: string;
-    width: number;
-    height: number;
-}
-
-export interface CloudStorageOptions extends UploadOptions {
-    bucket: string;
-    projectId: string;
-    keyFilename?: string;
-    filename?: string;
-    acl?: string;
-    sizes?: CloudStorageSize[]
-}
-
-export interface SharpOptions {
-    size?: MulterOptions<Size>;
-    resize?: SharpOption<Size>;
+export declare interface SharpOptions {
+    size?: Size;
+    resize?: boolean;
     crop?: SharpOption<string | number>;
     background?: SharpOption<RGBA | string>;
     embed?: boolean;
@@ -55,12 +40,12 @@ export interface SharpOptions {
     flatten?: boolean;
     extend?: SharpOption<number | ExtendOptions>;
     negate?: boolean;
-    rotate?: boolean;
+    rotate?: SharpOption<boolean | number>;
     flip?: boolean;
     flop?: boolean;
-    blur?: SharpOption<number>;
-    sharpen?: SharpOption<Sharpen>;
-    gamma?: SharpOption<number>;
+    blur?: SharpOption<boolean | number>;
+    sharpen?: SharpOption<boolean | Sharpen>;
+    gamma?: SharpOption<boolean | number>;
     grayscale?: boolean;
     greyscale?: boolean;
     normalize?: boolean;
@@ -74,7 +59,20 @@ export interface SharpOptions {
     gzip?: boolean;
 }
 
-export type MulterOptions = SharpOptions & CloudStorageOptions;
+declare interface Sizes extends Size {
+  suffix: string;
+}
+
+export declare interface CloudStorageOptions extends UploadOptions {
+  bucket: string;
+  projectId: string;
+  keyFilename?: string;
+  filename?: string;
+  acl?: string;
+  sizes?: Sizes[]
+}
+
+export declare type MulterOptions = SharpOptions & CloudStorageOptions;
 
 declare class MulterSharp {
     constructor(options: MulterOptions)
