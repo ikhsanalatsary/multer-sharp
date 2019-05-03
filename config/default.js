@@ -3,13 +3,6 @@
 module.exports = {
   acl: 'private',
   resize: true,
-  crop: false,
-  background: false,
-  embed: false,
-  max: false,
-  min: false,
-  withoutEnlargement: false,
-  ignoreAspectRatio: false,
   extract: false,
   trim: false,
   flatten: false,
@@ -32,5 +25,8 @@ module.exports = {
   toColorspace: false,
   toFormat: false,
   gzip: false,
-  metadata: {}
+  metadata: {},
+  composite: false,
+  ensureAlpha: false,
+  modulate: false
 };

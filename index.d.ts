@@ -1,4 +1,18 @@
-import { ResizeOptions, RGBA, Region, ExtendOptions, ThresholdOptions, AvailableFormatInfo, OutputOptions, JpegOptions, PngOptions, Metadata, Kernel } from 'sharp';
+import {
+  ResizeOptions,
+  RGBA,
+  Region,
+  ExtendOptions,
+  ThresholdOptions,
+  AvailableFormatInfo,
+  OutputOptions,
+  JpegOptions,
+  PngOptions,
+  Kernel,
+  OverlayOptions,
+  FlattenOptions,
+  WriteableMetadata
+} from 'sharp';
 import { UploadOptions } from '@google-cloud/storage';
 
 export declare interface Size {
@@ -18,6 +32,12 @@ export declare interface Threshold {
     options?: ThresholdOptions;
 }
 
+export declare interface Modulate {
+  brightness?: number;
+  saturation?: number;
+  hue?: number;
+}
+
 export declare interface Format {
     type: string | AvailableFormatInfo;
     options?: OutputOptions | JpegOptions | PngOptions;
@@ -28,16 +48,10 @@ declare type SharpOption<T = string> = false | T;
 export declare interface SharpOptions {
     size?: Size;
     resize?: boolean;
-    crop?: SharpOption<string | number>;
-    background?: SharpOption<RGBA | string>;
-    embed?: boolean;
-    max?: boolean;
-    min?: boolean;
-    withoutEnlargement?: boolean;
-    ignoreAspectRatio?: boolean;
+    composite?: Array<{ input: string | Buffer } & OverlayOptions>,
     extract?: SharpOption<Region>;
     trim?: SharpOption<number>;
-    flatten?: boolean;
+    flatten?: SharpOption<FlattenOptions>;
     extend?: SharpOption<number | ExtendOptions>;
     negate?: boolean;
     rotate?: SharpOption<boolean | number>;
@@ -50,13 +64,14 @@ export declare interface SharpOptions {
     greyscale?: boolean;
     normalize?: boolean;
     normalise?: boolean;
-    withMetadata?: SharpOption<Metadata>;
+    withMetadata?: SharpOption<WriteableMetadata>;
     convolve?: SharpOption<Kernel>;
     threshold?: SharpOption<number | Threshold>;
     toColourspace?: SharpOption;
     toColorspace?: SharpOption;
     toFormat?: SharpOption<string | Format>;
-    gzip?: boolean;
+    ensureAlpha?: boolean;
+    modulate?: SharpOption<Modulate>;
 }
 
 declare interface Sizes extends Size {
@@ -69,7 +84,8 @@ export declare interface CloudStorageOptions extends UploadOptions {
   keyFilename?: string;
   filename?: string;
   acl?: string;
-  sizes?: Sizes[]
+  sizes?: Sizes[];
+  gzip?: boolean;
 }
 
 export declare type MulterOptions = SharpOptions & CloudStorageOptions;
