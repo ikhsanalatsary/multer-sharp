@@ -6,7 +6,12 @@
   "scripts": {
     "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
     "test:old": "istanbul cover -x *.test.js node_modules/.bin/_mocha test/*.test.js",
-    "test": "jest --forceExit --coverage --ci"
+    "test": "jest --forceExit --coverage --ci",
+    "release": "standard-version",
+    "postrelease": "npm run release:github && npm run release:npm",
+    "release:github": "git push --no-verify --follow-tags origin master",
+    "release:npm": "npm publish",
+    "dry": "standard-version --dry-run"
   },
   "repository": {
     "type": "git",
@@ -54,27 +59,32 @@
     "lib/",
     "config/",
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "CHANGELOG.md"
   ],
   "devDependencies": {
-    "@types/google-cloud__storage": "^1.7.2",
-    "@types/sharp": "^0.17.10",
+    "@types/sharp": "0.22.1",
     "codecov": "^3.3.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "2.17.2",
     "express": "4.16.4",
     "jest": "^24.7.1",
     "multer": "1.4.1",
+    "standard-version": "5.0.2",
     "supertest": "4.0.2"
   },
   "dependencies": {
-    "@google-cloud/storage": "1.7.0",
+    "@google-cloud/storage": "2.5.0",
     "bluebird": "3.5.4",
     "chalk": "2.4.2",
     "mime-types": "2.1.24",
     "object.entries": "1.1.0",
-    "sharp": "0.20.8"
+    "sharp": "0.22.1"
+  },
+  "peerDependencies": {
+    "multer": "^1.4.1",
+    "sharp": ">= 0.170 <= 0.20.8"
   },
   "jest": {
     "testEnvironment": "node"

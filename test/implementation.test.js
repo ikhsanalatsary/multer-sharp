@@ -36,10 +36,10 @@ const storage = multerSharp({
     height: 400,
     option: {
       kernel: 'lanczos2',
-      interpolator: 'nohalo'
+      interpolator: 'nohalo',
+      fit: 'inside'
     }
-  },
-  max: true
+  }
 });
 const upload = multer({ storage });
 const storage2 = multerSharp({
@@ -52,9 +52,11 @@ const storage2 = multerSharp({
   acl: config.uploads.gcsUpload.acl,
   size: {
     width: 400,
-    height: 400
-  },
-  max: true
+    height: 400,
+    option: {
+      fit: 'inside'
+    }
+  }
 });
 const upload2 = multer({ storage: storage2 });
 
@@ -66,9 +68,11 @@ const storage3 = multerSharp({
   destination: config.uploads.gcsUpload.destination,
   size: {
     width: 400,
-    height: 400
+    height: 400,
+    option: {
+      fit: 'inside'
+    }
   },
-  max: true,
   toColourspace: 'srgb'
 });
 const upload3 = multer({ storage: storage3 });
@@ -79,15 +83,19 @@ const storage4 = multerSharp({
   keyFilename: config.uploads.gcsUpload.keyFilename,
   acl: config.uploads.gcsUpload.acl,
   destination: config.uploads.gcsUpload.destination,
-  size: { width: 200 },
-  crop: 16, // crop strategy
-  background: {
-    r: 0, g: 0, b: 100, alpha: 0
+  size: {
+    width: 200,
+    option: {
+      withoutEnlargement: true,
+      background: {
+        r: 0, g: 0, b: 100, alpha: 0
+      }
+    }
   },
-  withoutEnlargement: true,
-  ignoreAspectRatio: true,
   trim: 50,
-  flatten: true,
+  flatten: {
+    background: { r: 0, g: 0, b: 0 }
+  },
   extend: {
     top: 10, bottom: 20, left: 10, right: 10
   },
@@ -116,21 +124,24 @@ const storage5 = multerSharp({
   keyFilename: config.uploads.gcsUpload.keyFilename,
   acl: config.uploads.gcsUpload.acl,
   destination: config.uploads.gcsUpload.destination,
-  size: { width: 400, height: 400 },
-  crop: 'north',
-  background: {
-    r: 0, g: 0, b: 0, alpha: 0
+  size: {
+    width: 400,
+    height: 400,
+    option: {
+      position: 'north',
+      background: {
+        r: 0, g: 0, b: 0, alpha: 0
+      },
+      withoutEnlargement: true
+    }
   },
-  embed: true,
-  max: true,
-  min: true,
-  withoutEnlargement: true,
-  ignoreAspectRatio: true,
   extract: {
     left: 0, top: 2, width: 50, height: 100
   },
   trim: 50,
-  flatten: true,
+  flatten: {
+    background: { r: 0, g: 0, b: 0 }
+  },
   extend: {
     top: 10, bottom: 20, left: 10, right: 10
   },
@@ -164,9 +175,11 @@ const storage6 = multerSharp({
   acl: config.uploads.gcsUpload.acl,
   size: {
     width: 400,
-    height: 400
+    height: 400,
+    option: {
+      fit: 'cover'
+    }
   },
-  max: true,
   extract: {
     left: 0, top: 2, width: 400, height: 400
   }
@@ -219,9 +232,11 @@ const storage12 = multerSharp({
   destination: 'uploadArray',
   size: {
     width: 400,
-    height: 400
-  },
-  max: true
+    height: 400,
+    option: {
+      fit: 'fill'
+    }
+  }
 });
 const upload12 = multer({ storage: storage12 });
 
