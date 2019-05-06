@@ -11,7 +11,10 @@ import {
   Kernel,
   OverlayOptions,
   FlattenOptions,
-  WriteableMetadata
+  WriteableMetadata,
+  Raw,
+  Matrix3x3,
+  Color
 } from 'sharp';
 import { UploadOptions } from '@google-cloud/storage';
 
@@ -43,6 +46,22 @@ export declare interface Format {
     options?: OutputOptions | JpegOptions | PngOptions;
 }
 
+export declare interface BooleanOperand {
+  operand: string | Buffer;
+  operator: string;
+  options?: { raw: Raw };
+}
+
+export declare interface Linear {
+  a?: number | null;
+  b?: number
+}
+
+export declare interface JoinChannel {
+  images: string | Buffer | ArrayLike<string | Buffer>;
+  options?: SharpOptions;
+}
+
 declare type SharpOption<T = string> = false | T;
 
 export declare interface SharpOptions {
@@ -72,6 +91,15 @@ export declare interface SharpOptions {
     toFormat?: SharpOption<string | Format>;
     ensureAlpha?: boolean;
     modulate?: SharpOption<Modulate>;
+    median?: SharpOption<number>;
+    boolean?: SharpOption<BooleanOperand>;
+    linear?: SharpOption<Linear>;
+    recomb?: SharpOption<Matrix3x3>;
+    tint?: SharpOption<Color>;
+    removeAlpha?: boolean;
+    extractChannel?: SharpOption<number | string>;
+    joinChannel?: SharpOption<JoinChannel>;
+    bandbool?: SharpOption;
 }
 
 declare interface Sizes extends Size {
