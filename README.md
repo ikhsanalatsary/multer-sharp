@@ -2,7 +2,10 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/591acfd486004229adb02e47074d4d73)](https://app.codacy.com/app/ikhsanalatsary/multer-sharp?utm_source=github.com&utm_medium=referral&utm_content=ikhsanalatsary/multer-sharp&utm_campaign=badger)
 [ ![Codeship Status for ikhsanalatsary/multer-sharp](https://app.codeship.com/projects/aa56e710-0a47-0135-8b3c-6ed4d7e33e57/status?branch=master)](https://app.codeship.com/projects/214729) [![Build Status](https://travis-ci.org/ikhsanalatsary/multer-sharp.svg?branch=master)](https://travis-ci.org/ikhsanalatsary/multer-sharp) [![Code Climate](https://codeclimate.com/github/ikhsanalatsary/multer-sharp/badges/gpa.svg)](https://codeclimate.com/github/ikhsanalatsary/multer-sharp) [![codecov.io](https://codecov.io/gh/ikhsanalatsary/multer-sharp/coverage.svg?branch=master)](https://codecov.io/gh/ikhsanalatsary/multer-sharp?branch=master) [![Depedencies Status](https://david-dm.org/ikhsanalatsary/multer-sharp.svg)](https://david-dm.org/ikhsanalatsary/multer-sharp) [![devDepedencies Status](https://david-dm.org/ikhsanalatsary/multer-sharp/dev-status.svg)](https://david-dm.org/ikhsanalatsary/multer-sharp?type=dev)
-[![npm](https://img.shields.io/npm/dm/multer-sharp.svg)](http://npm.im/multer-sharp) [![Greenkeeper badge](https://badges.greenkeeper.io/ikhsanalatsary/multer-sharp.svg)](https://greenkeeper.io/)
+[![npm](https://img.shields.io/npm/dm/multer-sharp.svg)](http://npm.im/multer-sharp)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Standard Version](https://img.shields.io/badge/%20%20📦🚀-standard--version-e10079.svg)](https://github.com/conventional-changelog/standard-version)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ikhsanalatsary/multer-sharp.svg)](https://greenkeeper.io/)
 
 ***
 
@@ -148,20 +151,25 @@ const storage = gcsSharp(options);
 | sizes | no | an Array of size specification `object` for output image and specify diff size with suffix, as follow: `{ suffix: 'md', width: 300, height: 200, option: {[...resizeOptions]} }` property `height` & `option` is optional. doc: [sharpResizeOptions](http://sharp.dimens.io/en/stable/api-resize/#resize) |
 
 #### sharp options
-Please visit this **[sharp](https://github.com/lovell/sharp)** for detailed overview of specific option.
+Please visit this **[sharp](https://sharp.pixelplumbing.com/en/stable/)** for detailed overview of specific option.
 
 multer-sharp embraces sharp option, as table below:
 
 | option | default | role |
 | ------ | ------- | ---- |
 | resize | true | resize images as per their size mentioned in `options.size` |
-| crop | false | crop image |
-| background | false | set the background for the embed, flatten and extend operations. |
-| embed | false | embed on canvas |
-| max | false | set maximum output dimension  |
-| min | false | set minimum output dimension |
-| withoutEnlargement | false | do not enlarge small images |
-| ignoreAspectRatio | false | ignore aspect ration while resizing images |
+| composite | false | Composite image(s) over the processed (resized, extracted etc.) image |
+| median | false | Apply median filter. When used without parameters the default window is 3x3 |
+| modulate | false | Transforms the image using brightness, saturation and hue rotation. |
+| boolean | false | Perform a bitwise boolean operation with operand image |
+| linear | false | Apply the linear formula a * input + b to the image (levels adjustment) |
+| recomb | false | Recomb the image with the specified matrix |
+| tint | false | Tint the image using the provided chroma while preserving the image luminance |
+| removeAlpha | false | Remove alpha channel, if any |
+| ensureAlpha | false | Ensure alpha channel, if missing |
+| extractChannel | false | Extract a single channel from a multi-channel image |
+| joinChannel | false | Join one or more channels to the image |
+| bandbool | false | Perform a bitwise boolean operation on all input image channels (bands) to produce a single channel output image |
 | extract | false | extract specific part of image |
 | trim | false | Trim **boring** pixels from all edges |
 | flatten | false | Merge alpha transparency channel, if any, with background. |
@@ -179,7 +187,7 @@ multer-sharp embraces sharp option, as table below:
 | convolve | false | Convolve the image with the specified kernel.
 | threshold | false | Any pixel value greather than or equal to the threshold value will be set to 255, otherwise it will be set to 0
 | toColourspace *or* toColorspace | false | Set the output colourspace. By default output image will be web-friendly sRGB, with additional channels interpreted as alpha channels.
-| toFormat | false | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', options: { [...toFormatOptions] } }` doc: [sharpToFormat](http://sharp.dimens.io/en/stable/api-output/#toformat)|
+| toFormat | false | type of output file to produce. valid value : `'jpeg'`, `'png'`, `'magick'`, `'webp'`, `'tiff'`, `'openslide'`, `'dz'`, `'ppm'`, `'fits'`, `'gif'`, `'svg'`, `'pdf'`, `'v'`, `'raw'` or `object`. if `object` specify as follow: `{ type: 'png', options: { [...toFormatOptions] } }` doc: [sharpToFormat](https://sharp.pixelplumbing.com/en/stable/api-output/#toformat)|
 ***
 
 ## License
