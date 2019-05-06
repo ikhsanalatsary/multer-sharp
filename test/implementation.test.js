@@ -204,7 +204,9 @@ const storage8 = multerSharp({
     { suffix: 'md', width: 500, height: 500 },
     { suffix: 'sm', width: 300, height: 300 },
     { suffix: 'xs', width: 100, height: 100 }
-  ]
+  ],
+  median: 3,
+  linear: { a: 1.0 }
 });
 const upload8 = multer({ storage: storage8 });
 
@@ -236,7 +238,12 @@ const storage12 = multerSharp({
     option: {
       fit: 'fill'
     }
-  }
+  },
+  recomb: [
+    [0.3588, 0.7044, 0.1368],
+    [0.2990, 0.5870, 0.1140],
+    [0.2392, 0.4696, 0.0912]
+  ]
 });
 const upload12 = multer({ storage: storage12 });
 
@@ -268,6 +275,9 @@ const storage10 = multerSharp({
   ],
   extract: {
     left: 0, top: 2, width: 400, height: 400
+  },
+  modulate: {
+    brightness: 2 // increase lightness by a factor of 2
   }
 });
 const upload10 = multer({ storage: storage10 });

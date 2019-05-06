@@ -28,5 +28,14 @@ module.exports = {
   metadata: {},
   composite: false,
   ensureAlpha: false,
-  modulate: false
+  modulate: false,
+  median: false,
+  boolean: false,
+  linear: false,
+  recomb: false,
+  tint: false,
+  removeAlpha: false,
+  extractChannel: false,
+  joinChannel: false,
+  bandbool: false
 };
