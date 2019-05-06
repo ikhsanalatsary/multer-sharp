@@ -60,7 +60,8 @@
     "config/",
     "index.js",
     "index.d.ts",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "yarn.lock"
   ],
   "devDependencies": {
     "@types/sharp": "0.22.1",
@@ -83,6 +84,7 @@
     "sharp": "0.22.1"
   },
   "peerDependencies": {
+    "@google-cloud/storage": ">=2.0.0",
     "multer": "^1.4.1",
     "sharp": ">= 0.170 <= 0.20.8"
   },
