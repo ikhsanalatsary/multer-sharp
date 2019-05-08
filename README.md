@@ -16,7 +16,10 @@ This project is mostly an integration piece for existing code samples from Multe
 
 # Requirement:
 
-  node v6 LTS version or latest version
+  Node v8+
+
+# Breaking Change
+multer-sharp >= 0.6.0 uses sharp version 0.22.1 and because of that some setup in the previous version cannot support (e.g. crop) and break the entire function. You can see it through the sharp [changelog](https://sharp.pixelplumbing.com/en/stable/changelog/)
 
 # Installation
 
