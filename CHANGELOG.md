@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/ikhsanalatsary/multer-sharp/compare/v0.6.0...v0.6.1) (2019-05-08)
+
+
+### Bug Fixes
+
+* **package:** change peer dependency sharp ([0fb153d](https://github.com/ikhsanalatsary/multer-sharp/commit/0fb153d))
+
+
+
 ## [0.6.0](https://github.com/ikhsanalatsary/multer-sharp/compare/v0.5.2...v0.6.0) (2019-05-06)
 
 
