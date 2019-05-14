@@ -64,7 +64,7 @@
     "yarn.lock"
   ],
   "devDependencies": {
-    "@types/sharp": "0.22.1",
+    "@types/sharp": "0.22.2",
     "codecov": "^3.3.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
