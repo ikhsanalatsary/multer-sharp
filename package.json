@@ -78,7 +78,7 @@
   "dependencies": {
     "@google-cloud/storage": "2.5.0",
     "bluebird": "3.5.4",
-    "chalk": "2.4.2",
+    "chalk": "3.0.0",
     "mime-types": "2.1.24",
     "object.entries": "1.1.0",
     "sharp": "0.22.1"
