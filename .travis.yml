@@ -1,33 +1,25 @@
-sudo: false
 language: node_js
+os: linux
+dist: bionic
 cache:
   yarn: true
   directories:
   - node_modules
 notifications:
   email: false
-matrix:
+jobs:
   include:
     - os: linux
-      dist: xenial
-      sudo: false
-      node_js: "8"
-    - os: linux
-      dist: xenial
-      sudo: false
+      dist: bionic
       node_js: "10"
     - os: linux
-      dist: xenial
-      sudo: false
+      dist: bionic
       node_js: "12"
     - os: osx
-      osx_image: xcode10.2
-      node_js: "8"
-    - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11.0
       node_js: "10"
     - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11.0
       node_js: "12"
 script:
   - npm run test
