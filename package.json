@@ -64,7 +64,7 @@
     "yarn.lock"
   ],
   "devDependencies": {
-    "@types/sharp": "0.22.1",
+    "@types/sharp": "^0.24.0",
     "codecov": "^3.3.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
@@ -81,7 +81,7 @@
     "chalk": "3.0.0",
     "mime-types": "2.1.24",
     "object.entries": "1.1.1",
-    "sharp": "0.22.1"
+    "sharp": "0.25.1"
   },
   "peerDependencies": {
     "@google-cloud/storage": ">=2.0.0",
