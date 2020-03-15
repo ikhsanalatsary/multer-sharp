@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/ikhsanalatsary/multer-sharp/compare/v0.6.1...v0.6.2) (2020-03-15)
+
+
+### Bug Fixes
+
+* package.json & yarn.lock to reduce vulnerabilities ([#50](https://github.com/ikhsanalatsary/multer-sharp/issues/50)) ([f4393bd](https://github.com/ikhsanalatsary/multer-sharp/commit/f4393bd06fcf57c54a422201f7427c2b8fb6c3cc))
+* **package:** update object.entries to version 1.1.1 ([4a9ddfc](https://github.com/ikhsanalatsary/multer-sharp/commit/4a9ddfcff667686283fddcb3400b62ee00f27a18))
+
 ### [0.6.1](https://github.com/ikhsanalatsary/multer-sharp/compare/v0.6.0...v0.6.1) (2019-05-08)
 
 
