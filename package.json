@@ -81,7 +81,7 @@
     "chalk": "3.0.0",
     "mime-types": "2.1.26",
     "object.entries": "1.1.1",
-    "sharp": "0.25.1"
+    "sharp": "0.25.3"
   },
   "peerDependencies": {
     "@google-cloud/storage": ">=2.0.0",
