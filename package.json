@@ -80,7 +80,7 @@
     "bluebird": "3.7.2",
     "chalk": "3.0.0",
     "mime-types": "2.1.26",
-    "object.entries": "1.1.1",
+    "object.entries": "1.1.2",
     "sharp": "0.25.1"
   },
   "peerDependencies": {
