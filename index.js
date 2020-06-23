@@ -36,14 +36,14 @@ class MulterSharp {
     
     this.gcStorage = new Storage({
       projectId: options.projectId,
-      keyFilename: options.keyFilename
     });
     
+    if(options.keyfilename){
+      this.gcStorage.keyFilename = options.keyFilename
+    }
+    
     if(options.credentials){
-      this.gcStorage = new Storage({
-        projectId: options.projectId,
-        credentials: options.credentials
-      });
+      this.gcStorage.credentials = options.credentials
     }
 
     this.gcsBucket = this.gcStorage.bucket(options.bucket);
@@ -59,12 +59,6 @@ class MulterSharp {
     if (!options.projectId) {
       throw new Error(
         'You have to specify project id for Google Cloud Storage to work.'
-      );
-    }
-    
-    if (!options.keyFilename && !options.credentials) {
-      throw new Error(
-        'You have to specify a key filename, or credentials for Google Cloud Storage to work.'
       );
     }
   }
