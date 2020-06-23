@@ -64,7 +64,7 @@ class MulterSharp {
     
     if (!options.keyFilename && !options.credentials) {
       throw new Error(
-        'You have to specify a Key filename, or credentials for Google Cloud Storage to work.'
+        'You have to specify a key filename, or credentials for Google Cloud Storage to work.'
       );
     }
   }
