@@ -20,6 +20,7 @@ class MulterSharp {
     options.bucket = options.bucket || process.env.GCS_BUCKET || null;
     options.projectId = options.projectId || process.env.GC_PROJECT || null;
     options.keyFilename = options.keyFilename || process.env.GCS_KEYFILE || null;
+    options.credentials = options.credentials || process.env.GCS_Credentials || null;
 
     this._check(options);
 
@@ -32,11 +33,26 @@ class MulterSharp {
     } else {
       this.getDestination = options.destination || getDestination;
     }
-
-    this.gcStorage = new Storage({
-      projectId: options.projectId,
-      keyFilename: options.keyFilename
-    });
+    
+    if(options.keyFilename != null){
+      try{
+        this.gcStorage = new Storage({
+          projectId: options.projectId,
+          credentials: options.keyFilename
+        });
+      }catch(error){
+        console.log(error);
+      }
+    }else if(options.credentials != null){
+      try{
+        this.gcStorage = new Storage({
+          projectId: options.projectId,
+          credentials: options.credentials
+        });
+      }catch(error){
+        console.log(error);
+      }
+    }  
 
     this.gcsBucket = this.gcStorage.bucket(options.bucket);
   }
