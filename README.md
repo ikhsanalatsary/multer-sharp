@@ -8,6 +8,8 @@
 [![Standard Version](https://img.shields.io/badge/%20%20📦🚀-standard--version-e10079.svg)](https://github.com/conventional-changelog/standard-version)
 [![Greenkeeper badge](https://badges.greenkeeper.io/ikhsanalatsary/multer-sharp.svg)](https://greenkeeper.io/)
 
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg)](https://www.digitalocean.com/?refcode=dec9802955b6&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+
 ***
 
 Multer Sharp is streaming multer storage engine permit to resize and upload to Google Cloud Storage.
